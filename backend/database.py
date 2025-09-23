@@ -82,25 +82,25 @@ class Field(Base):
     requirement = Column(String(20), default='optional')  # 'optional', 'required'
     
     # Validation rules stored as JSON
-    validation = Column(JSON, default=dict)
+    validation = Column(JSONType, default=dict)
     
     # Select field properties
     select_type = Column(String(20))  # 'radio', 'multiple'
-    options = Column(JSON, default=list)  # List of select options with multilang labels
+    options = Column(JSONType, default=list)  # List of select options with multilang labels
     
     # Document field properties
     document_mode = Column(String(50))  # 'download', 'download_upload', etc.
-    document_constraints = Column(JSON, default=dict)
+    document_constraints = Column(JSONType, default=dict)
     
     # Role-based configuration
-    role_config = Column(JSON, default=dict)
+    role_config = Column(JSONType, default=dict)
     
     # Customer-specific visibility
     customer_specific = Column(Boolean, default=False)
-    visible_for_customers = Column(JSON, default=list)
+    visible_for_customers = Column(JSONType, default=list)
     
     # Dependencies stored as JSON
-    dependencies = Column(JSON, default=list)
+    dependencies = Column(JSONType, default=list)
     
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
