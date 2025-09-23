@@ -17,6 +17,8 @@ from database import (
     get_db, create_tables, Template, Field, ChangeLogEntry, MultiLanguageText,
     get_multilanguage_text, set_multilanguage_text, update_multilanguage_text
 )
+from dependency_engine import DependencyEngine
+from advanced_validation import AdvancedValidator
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
