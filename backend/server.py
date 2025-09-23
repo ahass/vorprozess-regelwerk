@@ -396,57 +396,34 @@ async def delete_field(field_id: str, user_id: str = "system", db: Session = Dep
     
     return {"message": "Field deleted successfully"}
 
-# Template rendering for roles
+# Template rendering for roles with advanced dependency logic
 @api_router.post("/templates/render", response_model=TemplateRenderResponse)
 async def render_templates(render_request: TemplateRenderRequest, db: Session = Depends(get_db)):
+    # Initialize dependency engine
+    dep_engine = DependencyEngine(db)
+    
     # Get templates with their fields
     templates = db.query(Template).filter(Template.id.in_(render_request.template_ids)).all()
     
-    # Collect all field IDs
-    all_field_ids = []
-    for template in templates:
-        all_field_ids.extend([field.id for field in template.fields])
-    
-    # Get fields
-    fields = db.query(Field).filter(Field.id.in_(all_field_ids)).all()
-    
-    # Convert to response format with multilanguage texts
+    # Process each template with advanced filtering
     template_responses = []
     for template in templates:
-        template_dict = {
-            "id": template.id,
-            "name": get_multilanguage_text(db, "template_name", template.id),
-            "description": get_multilanguage_text(db, "template_description", template.id),
-            "fields": [field.id for field in template.fields],
-            "role_config": template.role_config,
-            "customer_specific": template.customer_specific,
-            "visible_for_customers": template.visible_for_customers
-        }
-        template_responses.append(template_dict)
+        rendered_template = dep_engine.render_template_for_role(
+            template=template,
+            role=render_request.role,
+            customer_id=render_request.customer_id,
+            field_values={}  # In real usage, this would come from form data
+        )
+        template_responses.append(rendered_template)
     
-    field_responses = []
-    for field in fields:
-        field_dict = {
-            "id": field.id,
-            "name": get_multilanguage_text(db, "field_name", field.id),
-            "type": field.type,
-            "visibility": field.visibility,
-            "requirement": field.requirement,
-            "validation": field.validation,
-            "select_type": field.select_type,
-            "options": field.options,
-            "document_mode": field.document_mode,
-            "document_constraints": field.document_constraints,
-            "role_config": field.role_config,
-            "customer_specific": field.customer_specific,
-            "visible_for_customers": field.visible_for_customers,
-            "dependencies": field.dependencies
-        }
-        field_responses.append(field_dict)
+    # Collect all fields for separate response (backward compatibility)
+    all_fields = []
+    for template_response in template_responses:
+        all_fields.extend(template_response.get('fields', []))
     
     return TemplateRenderResponse(
         templates=template_responses,
-        fields=field_responses
+        fields=all_fields
     )
 
 # Change log endpoints
