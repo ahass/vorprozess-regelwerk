@@ -33,7 +33,7 @@ class JSONType(TypeDecorator):
         return value
 
 # Use JSONType for both SQLite and SQL Server compatibility
-JsonColumn = JSONType
+# Association table for template-field many-to-many relationship
 template_fields = Table(
     'template_fields',
     Base.metadata,
