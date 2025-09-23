@@ -115,7 +115,7 @@ class ChangeLogEntry(Base):
     entity_type = Column(String(20), nullable=False)  # 'template' or 'field'
     entity_id = Column(String(36), nullable=False)
     action = Column(String(20), nullable=False)  # 'created', 'updated', 'deleted'
-    changes = Column(JSON, default=dict)  # What changed
+    changes = Column(JSONType, default=dict)  # What changed
     user_id = Column(String(100), nullable=False)
     user_name = Column(String(200), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
