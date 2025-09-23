@@ -18,7 +18,22 @@ engine = create_engine(database_url, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# Association table for template-field many-to-many relationship
+# Custom JSON type for SQLite compatibility
+class JSONType(TypeDecorator):
+    impl = TEXT
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            return json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            return json.loads(value)
+        return value
+
+# Use JSONType for both SQLite and SQL Server compatibility
+JsonColumn = JSONType
 template_fields = Table(
     'template_fields',
     Base.metadata,
