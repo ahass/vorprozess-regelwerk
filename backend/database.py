@@ -57,11 +57,11 @@ class Template(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     
     # Role-based configuration stored as JSON
-    role_config = Column(JSON, default=dict)
+    role_config = Column(JSONType, default=dict)
     
     # Customer-specific configuration
     customer_specific = Column(Boolean, default=False)
-    visible_for_customers = Column(JSON, default=list)  # List of customer IDs
+    visible_for_customers = Column(JSONType, default=list)  # List of customer IDs
     
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow)
