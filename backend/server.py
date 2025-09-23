@@ -348,30 +348,49 @@ async def get_field(field_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Field not found")
     return db_field_to_response(field, db)
 
+# Update field endpoint with dependency support
 @api_router.put("/fields/{field_id}", response_model=FieldResponse)
-async def update_field(field_id: str, field_data: FieldCreate, user_id: str = "system", db: Session = Depends(get_db)):
+async def update_field(field_id: str, field_data: Dict[str, Any], user_id: str = "system", db: Session = Depends(get_db)):
     field = db.query(Field).filter(Field.id == field_id).first()
     if not field:
         raise HTTPException(status_code=404, detail="Field not found")
     
     # Update field properties
-    field.type = field_data.type
-    field.visibility = field_data.visibility
-    field.requirement = field_data.requirement
-    field.validation = field_data.validation.dict() if field_data.validation else {}
-    field.select_type = field_data.select_type
-    field.options = [opt.dict() for opt in field_data.options] if field_data.options else []
-    field.document_mode = field_data.document_mode
-    field.document_constraints = field_data.document_constraints.dict() if field_data.document_constraints else {}
+    if 'type' in field_data:
+        field.type = field_data['type']
+    if 'visibility' in field_data:
+        field.visibility = field_data['visibility']
+    if 'requirement' in field_data:
+        field.requirement = field_data['requirement']
+    if 'validation' in field_data:
+        field.validation = field_data['validation']
+    if 'select_type' in field_data:
+        field.select_type = field_data['select_type']
+    if 'options' in field_data:
+        field.options = field_data['options']
+    if 'document_mode' in field_data:
+        field.document_mode = field_data['document_mode']
+    if 'document_constraints' in field_data:
+        field.document_constraints = field_data['document_constraints']
+    if 'dependencies' in field_data:
+        field.dependencies = field_data['dependencies']
+    if 'role_config' in field_data:
+        field.role_config = field_data['role_config']
+    if 'customer_specific' in field_data:
+        field.customer_specific = field_data['customer_specific']
+    if 'visible_for_customers' in field_data:
+        field.visible_for_customers = field_data['visible_for_customers']
+    
     field.updated_at = datetime.utcnow()
     
-    # Update multilanguage text
-    update_multilanguage_text(db, "field_name", field_id, field_data.name.dict())
+    # Update multilanguage text if provided
+    if 'name' in field_data:
+        update_multilanguage_text(db, "field_name", field_id, field_data['name'])
     
     db.commit()
     
     # Log change
-    await log_change(db, "field", field_id, "updated", field_data.dict(), user_id, "System User")
+    await log_change(db, "field", field_id, "updated", field_data, user_id, "System User")
     
     return db_field_to_response(field, db)
 
