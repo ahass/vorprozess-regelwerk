@@ -77,7 +77,7 @@ class DocumentConstraints(BaseModel):
     allowed_formats: Optional[List[str]] = None
 
 class SelectOption(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    id: str = Field(default_factory=str(uuid.uuid4))
     label: MultiLanguageTextModel
     value: str
 
