@@ -1,7 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException, Depends
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
@@ -10,16 +9,19 @@ from typing import List, Dict, Optional, Union, Any
 import uuid
 from datetime import datetime
 from enum import Enum
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+
+# Import database modules
+from database import (
+    get_db, create_tables, Template, Field, ChangeLogEntry, MultiLanguageText,
+    get_multilanguage_text, set_multilanguage_text, update_multilanguage_text
+)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
-# Create the main app without a prefix
+# Create the main app
 app = FastAPI(title="Vorprozess Regelwerk API", version="1.0.0")
 
 # Create a router with the /api prefix
@@ -59,104 +61,44 @@ class Language(str, Enum):
     FR = "fr"
     IT = "it"
 
-# Base Models
-class MultiLanguageText(BaseModel):
-    de: str
-    fr: str
-    it: str
+# Pydantic Models for API
+class MultiLanguageTextModel(BaseModel):
+    de: str = ""
+    fr: str = ""
+    it: str = ""
 
 class FieldDependency(BaseModel):
     field_id: str
     condition_value: Union[str, List[str]]
-    operator: str = "equals"  # equals, in, not_equals
+    operator: str = "equals"
 
 class DocumentConstraints(BaseModel):
     max_size_mb: Optional[float] = None
-    allowed_formats: Optional[List[str]] = None  # ["pdf", "doc", "docx"]
+    allowed_formats: Optional[List[str]] = None
 
 class SelectOption(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    label: MultiLanguageText
+    label: MultiLanguageTextModel
     value: str
 
 class FieldValidation(BaseModel):
     min_length: Optional[int] = None
     max_length: Optional[int] = None
-    pattern: Optional[str] = None  # regex pattern
+    pattern: Optional[str] = None
     date_format: Optional[str] = None
 
-# Core Models
-class Field(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    name: MultiLanguageText
-    type: FieldType
-    visibility: FieldVisibility = FieldVisibility.EDITABLE
-    requirement: FieldRequirement = FieldRequirement.OPTIONAL
-    
-    # For text fields
-    validation: Optional[FieldValidation] = None
-    
-    # For select fields
-    select_type: Optional[SelectType] = None
-    options: Optional[List[SelectOption]] = None
-    
-    # For document fields
-    document_mode: Optional[DocumentMode] = None
-    document_constraints: Optional[DocumentConstraints] = None
-    
-    # Role-based configuration
-    role_config: Dict[UserRole, Dict[str, Any]] = Field(default_factory=dict)
-    
-    # Customer-specific visibility
-    customer_specific: bool = False
-    visible_for_customers: Optional[List[str]] = None
-    
-    # Dependencies
-    dependencies: Optional[List[FieldDependency]] = None
-    
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-class Template(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    name: MultiLanguageText
-    description: Optional[MultiLanguageText] = None
-    fields: List[str] = Field(default_factory=list)  # Field IDs
-    
-    # Role-based configuration
-    role_config: Dict[UserRole, Dict[str, Any]] = Field(default_factory=dict)
-    
-    # Customer-specific configuration
-    customer_specific: bool = False
-    visible_for_customers: Optional[List[str]] = None
-    
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    created_by: Optional[str] = None
-    updated_by: Optional[str] = None
-
-class ChangeLogEntry(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    entity_type: str  # "template" or "field"
-    entity_id: str
-    action: str  # "created", "updated", "deleted"
-    changes: Dict[str, Any]  # What changed
-    user_id: str
-    user_name: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-
-# Request/Response Models
+# Request Models
 class TemplateCreate(BaseModel):
-    name: MultiLanguageText
-    description: Optional[MultiLanguageText] = None
+    name: MultiLanguageTextModel
+    description: Optional[MultiLanguageTextModel] = None
 
 class TemplateUpdate(BaseModel):
-    name: Optional[MultiLanguageText] = None
-    description: Optional[MultiLanguageText] = None
+    name: Optional[MultiLanguageTextModel] = None
+    description: Optional[MultiLanguageTextModel] = None
     fields: Optional[List[str]] = None
 
 class FieldCreate(BaseModel):
-    name: MultiLanguageText
+    name: MultiLanguageTextModel
     type: FieldType
     visibility: FieldVisibility = FieldVisibility.EDITABLE
     requirement: FieldRequirement = FieldRequirement.OPTIONAL
@@ -172,182 +114,98 @@ class TemplateRenderRequest(BaseModel):
     customer_id: Optional[str] = None
     language: Language = Language.DE
 
+# Response Models
+class TemplateResponse(BaseModel):
+    id: str
+    name: MultiLanguageTextModel
+    description: Optional[MultiLanguageTextModel]
+    fields: List[str]
+    role_config: Dict[str, Any]
+    customer_specific: bool
+    visible_for_customers: Optional[List[str]]
+    created_at: datetime
+    updated_at: datetime
+    created_by: Optional[str]
+    updated_by: Optional[str]
+
+class FieldResponse(BaseModel):
+    id: str
+    name: MultiLanguageTextModel
+    type: FieldType
+    visibility: FieldVisibility
+    requirement: FieldRequirement
+    validation: Optional[Dict[str, Any]]
+    select_type: Optional[SelectType]
+    options: Optional[List[Dict[str, Any]]]
+    document_mode: Optional[DocumentMode]
+    document_constraints: Optional[Dict[str, Any]]
+    role_config: Dict[str, Any]
+    customer_specific: bool
+    visible_for_customers: Optional[List[str]]
+    dependencies: Optional[List[Dict[str, Any]]]
+    created_at: datetime
+    updated_at: datetime
+
+class ChangeLogResponse(BaseModel):
+    id: str
+    entity_type: str
+    entity_id: str
+    action: str
+    changes: Dict[str, Any]
+    user_id: str
+    user_name: str
+    timestamp: datetime
+
 class TemplateRenderResponse(BaseModel):
     templates: List[Dict[str, Any]]
     fields: List[Dict[str, Any]]
 
-# API Routes
-@api_router.get("/")
-async def root():
-    return {"message": "Vorprozess Regelwerk API v1.0", "status": "running"}
-
-# Template endpoints
-@api_router.post("/templates", response_model=Template)
-async def create_template(template_data: TemplateCreate, user_id: str = "system"):
-    template_dict = template_data.dict()
-    template_obj = Template(**template_dict, created_by=user_id, updated_by=user_id)
+# Helper Functions
+def db_template_to_response(db_template: Template, db: Session) -> TemplateResponse:
+    """Convert database template to API response model"""
+    name = get_multilanguage_text(db, "template_name", db_template.id)
+    description = get_multilanguage_text(db, "template_description", db_template.id)
     
-    # Insert into database
-    result = await db.templates.insert_one(template_obj.dict())
-    
-    # Log change
-    await log_change("template", template_obj.id, "created", template_dict, user_id, "System User")
-    
-    return template_obj
-
-@api_router.get("/templates", response_model=List[Template])
-async def get_templates():
-    templates = await db.templates.find().to_list(1000)
-    return [Template(**template) for template in templates]
-
-@api_router.get("/templates/{template_id}", response_model=Template)
-async def get_template(template_id: str):
-    template = await db.templates.find_one({"id": template_id})
-    if not template:
-        raise HTTPException(status_code=404, detail="Template not found")
-    return Template(**template)
-
-@api_router.put("/templates/{template_id}", response_model=Template)
-async def update_template(template_id: str, template_data: TemplateUpdate, user_id: str = "system"):
-    # Get existing template
-    existing = await db.templates.find_one({"id": template_id})
-    if not existing:
-        raise HTTPException(status_code=404, detail="Template not found")
-    
-    # Update fields
-    update_data = {k: v for k, v in template_data.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
-    update_data["updated_by"] = user_id
-    
-    # Update in database
-    await db.templates.update_one({"id": template_id}, {"$set": update_data})
-    
-    # Log change
-    await log_change("template", template_id, "updated", update_data, user_id, "System User")
-    
-    # Return updated template
-    updated = await db.templates.find_one({"id": template_id})
-    return Template(**updated)
-
-@api_router.delete("/templates/{template_id}")
-async def delete_template(template_id: str, user_id: str = "system"):
-    result = await db.templates.delete_one({"id": template_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Template not found")
-    
-    # Log change
-    await log_change("template", template_id, "deleted", {}, user_id, "System User")
-    
-    return {"message": "Template deleted successfully"}
-
-# Field endpoints
-@api_router.post("/fields", response_model=Field)
-async def create_field(field_data: FieldCreate, user_id: str = "system"):
-    field_dict = field_data.dict()
-    field_obj = Field(**field_dict)
-    
-    # Insert into database
-    result = await db.fields.insert_one(field_obj.dict())
-    
-    # Log change
-    await log_change("field", field_obj.id, "created", field_dict, user_id, "System User")
-    
-    return field_obj
-
-@api_router.get("/fields", response_model=List[Field])
-async def get_fields():
-    fields = await db.fields.find().to_list(1000)
-    return [Field(**field) for field in fields]
-
-@api_router.get("/fields/{field_id}", response_model=Field)
-async def get_field(field_id: str):
-    field = await db.fields.find_one({"id": field_id})
-    if not field:
-        raise HTTPException(status_code=404, detail="Field not found")
-    return Field(**field)
-
-@api_router.put("/fields/{field_id}", response_model=Field)
-async def update_field(field_id: str, field_data: FieldCreate, user_id: str = "system"):
-    # Get existing field
-    existing = await db.fields.find_one({"id": field_id})
-    if not existing:
-        raise HTTPException(status_code=404, detail="Field not found")
-    
-    # Update fields
-    update_data = field_data.dict()
-    update_data["updated_at"] = datetime.utcnow()
-    
-    # Update in database
-    await db.fields.update_one({"id": field_id}, {"$set": update_data})
-    
-    # Log change
-    await log_change("field", field_id, "updated", update_data, user_id, "System User")
-    
-    # Return updated field
-    updated = await db.fields.find_one({"id": field_id})
-    return Field(**updated)
-
-@api_router.delete("/fields/{field_id}")
-async def delete_field(field_id: str, user_id: str = "system"):
-    result = await db.fields.delete_one({"id": field_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Field not found")
-    
-    # Log change
-    await log_change("field", field_id, "deleted", {}, user_id, "System User")
-    
-    return {"message": "Field deleted successfully"}
-
-# Template rendering for roles
-@api_router.post("/templates/render", response_model=TemplateRenderResponse)
-async def render_templates(render_request: TemplateRenderRequest):
-    # Get templates
-    templates = await db.templates.find({"id": {"$in": render_request.template_ids}}).to_list(1000)
-    
-    # Collect all field IDs
-    all_field_ids = []
-    for template in templates:
-        all_field_ids.extend(template.get("fields", []))
-    
-    # Get fields
-    fields = await db.fields.find({"id": {"$in": all_field_ids}}).to_list(1000)
-    
-    # Filter and process based on role, customer, dependencies
-    filtered_templates = []
-    filtered_fields = []
-    
-    for template in templates:
-        # Apply role and customer filtering logic here
-        # For now, return all (will implement filtering logic later)
-        filtered_templates.append(template)
-    
-    for field in fields:
-        # Apply role and customer filtering logic here
-        # For now, return all (will implement filtering logic later)
-        filtered_fields.append(field)
-    
-    return TemplateRenderResponse(
-        templates=filtered_templates,
-        fields=filtered_fields
+    return TemplateResponse(
+        id=db_template.id,
+        name=MultiLanguageTextModel(**name) if name else MultiLanguageTextModel(),
+        description=MultiLanguageTextModel(**description) if description else None,
+        fields=[field.id for field in db_template.fields],
+        role_config=db_template.role_config or {},
+        customer_specific=db_template.customer_specific,
+        visible_for_customers=db_template.visible_for_customers,
+        created_at=db_template.created_at,
+        updated_at=db_template.updated_at,
+        created_by=db_template.created_by,
+        updated_by=db_template.updated_by
     )
 
-# Change log endpoints
-@api_router.get("/changelog", response_model=List[ChangeLogEntry])
-async def get_changelog(limit: int = 100, entity_type: Optional[str] = None):
-    query = {}
-    if entity_type:
-        query["entity_type"] = entity_type
+def db_field_to_response(db_field: Field, db: Session) -> FieldResponse:
+    """Convert database field to API response model"""
+    name = get_multilanguage_text(db, "field_name", db_field.id)
     
-    changelog = await db.change_logs.find(query).sort("timestamp", -1).limit(limit).to_list(limit)
-    return [ChangeLogEntry(**entry) for entry in changelog]
+    return FieldResponse(
+        id=db_field.id,
+        name=MultiLanguageTextModel(**name) if name else MultiLanguageTextModel(),
+        type=db_field.type,
+        visibility=db_field.visibility,
+        requirement=db_field.requirement,
+        validation=db_field.validation,
+        select_type=db_field.select_type,
+        options=db_field.options,
+        document_mode=db_field.document_mode,
+        document_constraints=db_field.document_constraints,
+        role_config=db_field.role_config or {},
+        customer_specific=db_field.customer_specific,
+        visible_for_customers=db_field.visible_for_customers,
+        dependencies=db_field.dependencies,
+        created_at=db_field.created_at,
+        updated_at=db_field.updated_at
+    )
 
-@api_router.get("/changelog/{entity_id}")
-async def get_entity_changelog(entity_id: str):
-    changelog = await db.change_logs.find({"entity_id": entity_id}).sort("timestamp", -1).to_list(100)
-    return [ChangeLogEntry(**entry) for entry in changelog]
-
-# Helper function for logging changes
-async def log_change(entity_type: str, entity_id: str, action: str, changes: Dict[str, Any], user_id: str, user_name: str):
+async def log_change(db: Session, entity_type: str, entity_id: str, action: str, 
+                    changes: Dict[str, Any], user_id: str = "system", user_name: str = "System User"):
+    """Log changes to the change log table"""
     log_entry = ChangeLogEntry(
         entity_type=entity_type,
         entity_id=entity_id,
@@ -356,7 +214,276 @@ async def log_change(entity_type: str, entity_id: str, action: str, changes: Dic
         user_id=user_id,
         user_name=user_name
     )
-    await db.change_logs.insert_one(log_entry.dict())
+    db.add(log_entry)
+    db.commit()
+
+# API Routes
+@api_router.get("/")
+async def root():
+    return {"message": "Vorprozess Regelwerk API v1.0 with SQL Server", "status": "running"}
+
+# Template endpoints
+@api_router.post("/templates", response_model=TemplateResponse)
+async def create_template(template_data: TemplateCreate, user_id: str = "system", db: Session = Depends(get_db)):
+    # Create template
+    db_template = Template(
+        created_by=user_id,
+        updated_by=user_id
+    )
+    db.add(db_template)
+    db.commit()
+    db.refresh(db_template)
+    
+    # Set multilanguage texts
+    set_multilanguage_text(db, "template_name", db_template.id, template_data.name.dict())
+    if template_data.description:
+        set_multilanguage_text(db, "template_description", db_template.id, template_data.description.dict())
+    
+    # Log change
+    await log_change(db, "template", db_template.id, "created", template_data.dict(), user_id, "System User")
+    
+    return db_template_to_response(db_template, db)
+
+@api_router.get("/templates", response_model=List[TemplateResponse])
+async def get_templates(db: Session = Depends(get_db)):
+    templates = db.query(Template).all()
+    return [db_template_to_response(template, db) for template in templates]
+
+@api_router.get("/templates/{template_id}", response_model=TemplateResponse)
+async def get_template(template_id: str, db: Session = Depends(get_db)):
+    template = db.query(Template).filter(Template.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return db_template_to_response(template, db)
+
+@api_router.put("/templates/{template_id}", response_model=TemplateResponse)
+async def update_template(template_id: str, template_data: TemplateUpdate, user_id: str = "system", db: Session = Depends(get_db)):
+    template = db.query(Template).filter(Template.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    # Update basic fields
+    template.updated_at = datetime.utcnow()
+    template.updated_by = user_id
+    
+    # Handle fields update
+    if template_data.fields is not None:
+        # Clear existing relationships
+        template.fields.clear()
+        # Add new field relationships
+        fields = db.query(Field).filter(Field.id.in_(template_data.fields)).all()
+        template.fields.extend(fields)
+    
+    # Update multilanguage texts
+    if template_data.name:
+        update_multilanguage_text(db, "template_name", template_id, template_data.name.dict())
+    if template_data.description:
+        update_multilanguage_text(db, "template_description", template_id, template_data.description.dict())
+    
+    db.commit()
+    
+    # Log change
+    await log_change(db, "template", template_id, "updated", template_data.dict(exclude_unset=True), user_id, "System User")
+    
+    return db_template_to_response(template, db)
+
+@api_router.delete("/templates/{template_id}")
+async def delete_template(template_id: str, user_id: str = "system", db: Session = Depends(get_db)):
+    template = db.query(Template).filter(Template.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    # Delete multilanguage texts
+    db.query(MultiLanguageText).filter(
+        MultiLanguageText.entity_type.in_(["template_name", "template_description"]),
+        MultiLanguageText.entity_id == template_id
+    ).delete()
+    
+    # Delete template
+    db.delete(template)
+    db.commit()
+    
+    # Log change
+    await log_change(db, "template", template_id, "deleted", {}, user_id, "System User")
+    
+    return {"message": "Template deleted successfully"}
+
+# Field endpoints
+@api_router.post("/fields", response_model=FieldResponse)
+async def create_field(field_data: FieldCreate, user_id: str = "system", db: Session = Depends(get_db)):
+    # Create field
+    db_field = Field(
+        type=field_data.type,
+        visibility=field_data.visibility,
+        requirement=field_data.requirement,
+        validation=field_data.validation.dict() if field_data.validation else {},
+        select_type=field_data.select_type,
+        options=[opt.dict() for opt in field_data.options] if field_data.options else [],
+        document_mode=field_data.document_mode,
+        document_constraints=field_data.document_constraints.dict() if field_data.document_constraints else {}
+    )
+    db.add(db_field)
+    db.commit()
+    db.refresh(db_field)
+    
+    # Set multilanguage text for field name
+    set_multilanguage_text(db, "field_name", db_field.id, field_data.name.dict())
+    
+    # Log change
+    await log_change(db, "field", db_field.id, "created", field_data.dict(), user_id, "System User")
+    
+    return db_field_to_response(db_field, db)
+
+@api_router.get("/fields", response_model=List[FieldResponse])
+async def get_fields(db: Session = Depends(get_db)):
+    fields = db.query(Field).all()
+    return [db_field_to_response(field, db) for field in fields]
+
+@api_router.get("/fields/{field_id}", response_model=FieldResponse)
+async def get_field(field_id: str, db: Session = Depends(get_db)):
+    field = db.query(Field).filter(Field.id == field_id).first()
+    if not field:
+        raise HTTPException(status_code=404, detail="Field not found")
+    return db_field_to_response(field, db)
+
+@api_router.put("/fields/{field_id}", response_model=FieldResponse)
+async def update_field(field_id: str, field_data: FieldCreate, user_id: str = "system", db: Session = Depends(get_db)):
+    field = db.query(Field).filter(Field.id == field_id).first()
+    if not field:
+        raise HTTPException(status_code=404, detail="Field not found")
+    
+    # Update field properties
+    field.type = field_data.type
+    field.visibility = field_data.visibility
+    field.requirement = field_data.requirement
+    field.validation = field_data.validation.dict() if field_data.validation else {}
+    field.select_type = field_data.select_type
+    field.options = [opt.dict() for opt in field_data.options] if field_data.options else []
+    field.document_mode = field_data.document_mode
+    field.document_constraints = field_data.document_constraints.dict() if field_data.document_constraints else {}
+    field.updated_at = datetime.utcnow()
+    
+    # Update multilanguage text
+    update_multilanguage_text(db, "field_name", field_id, field_data.name.dict())
+    
+    db.commit()
+    
+    # Log change
+    await log_change(db, "field", field_id, "updated", field_data.dict(), user_id, "System User")
+    
+    return db_field_to_response(field, db)
+
+@api_router.delete("/fields/{field_id}")
+async def delete_field(field_id: str, user_id: str = "system", db: Session = Depends(get_db)):
+    field = db.query(Field).filter(Field.id == field_id).first()
+    if not field:
+        raise HTTPException(status_code=404, detail="Field not found")
+    
+    # Delete multilanguage texts
+    db.query(MultiLanguageText).filter(
+        MultiLanguageText.entity_type == "field_name",
+        MultiLanguageText.entity_id == field_id
+    ).delete()
+    
+    # Delete field
+    db.delete(field)
+    db.commit()
+    
+    # Log change
+    await log_change(db, "field", field_id, "deleted", {}, user_id, "System User")
+    
+    return {"message": "Field deleted successfully"}
+
+# Template rendering for roles
+@api_router.post("/templates/render", response_model=TemplateRenderResponse)
+async def render_templates(render_request: TemplateRenderRequest, db: Session = Depends(get_db)):
+    # Get templates with their fields
+    templates = db.query(Template).filter(Template.id.in_(render_request.template_ids)).all()
+    
+    # Collect all field IDs
+    all_field_ids = []
+    for template in templates:
+        all_field_ids.extend([field.id for field in template.fields])
+    
+    # Get fields
+    fields = db.query(Field).filter(Field.id.in_(all_field_ids)).all()
+    
+    # Convert to response format with multilanguage texts
+    template_responses = []
+    for template in templates:
+        template_dict = {
+            "id": template.id,
+            "name": get_multilanguage_text(db, "template_name", template.id),
+            "description": get_multilanguage_text(db, "template_description", template.id),
+            "fields": [field.id for field in template.fields],
+            "role_config": template.role_config,
+            "customer_specific": template.customer_specific,
+            "visible_for_customers": template.visible_for_customers
+        }
+        template_responses.append(template_dict)
+    
+    field_responses = []
+    for field in fields:
+        field_dict = {
+            "id": field.id,
+            "name": get_multilanguage_text(db, "field_name", field.id),
+            "type": field.type,
+            "visibility": field.visibility,
+            "requirement": field.requirement,
+            "validation": field.validation,
+            "select_type": field.select_type,
+            "options": field.options,
+            "document_mode": field.document_mode,
+            "document_constraints": field.document_constraints,
+            "role_config": field.role_config,
+            "customer_specific": field.customer_specific,
+            "visible_for_customers": field.visible_for_customers,
+            "dependencies": field.dependencies
+        }
+        field_responses.append(field_dict)
+    
+    return TemplateRenderResponse(
+        templates=template_responses,
+        fields=field_responses
+    )
+
+# Change log endpoints
+@api_router.get("/changelog", response_model=List[ChangeLogResponse])
+async def get_changelog(limit: int = 100, entity_type: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(ChangeLogEntry)
+    
+    if entity_type:
+        query = query.filter(ChangeLogEntry.entity_type == entity_type)
+    
+    changelog = query.order_by(ChangeLogEntry.timestamp.desc()).limit(limit).all()
+    
+    return [ChangeLogResponse(
+        id=entry.id,
+        entity_type=entry.entity_type,
+        entity_id=entry.entity_id,
+        action=entry.action,
+        changes=entry.changes,
+        user_id=entry.user_id,
+        user_name=entry.user_name,
+        timestamp=entry.timestamp
+    ) for entry in changelog]
+
+@api_router.get("/changelog/{entity_id}")
+async def get_entity_changelog(entity_id: str, db: Session = Depends(get_db)):
+    changelog = db.query(ChangeLogEntry).filter(
+        ChangeLogEntry.entity_id == entity_id
+    ).order_by(ChangeLogEntry.timestamp.desc()).limit(100).all()
+    
+    return [ChangeLogResponse(
+        id=entry.id,
+        entity_type=entry.entity_type,
+        entity_id=entry.entity_id,
+        action=entry.action,
+        changes=entry.changes,
+        user_id=entry.user_id,
+        user_name=entry.user_name,
+        timestamp=entry.timestamp
+    ) for entry in changelog]
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -376,6 +503,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@app.on_event("startup")
+async def startup_event():
+    create_tables()
+    logger.info("Database tables created successfully")
+
 @app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+async def shutdown_event():
+    logger.info("Application shutting down")
