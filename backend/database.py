@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine, Column, String, DateTime, Text, Boolean, Integer, Float, ForeignKey, Table, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
-from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
+from sqlalchemy.types import TypeDecorator, TEXT
 import os
 from dotenv import load_dotenv
 from pathlib import Path
 import uuid
 from datetime import datetime
+import json
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
