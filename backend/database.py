@@ -11,9 +11,9 @@ from datetime import datetime
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# SQL Server Connection
-connection_string = os.environ.get('SQL_SERVER_CONNECTION_STRING')
-engine = create_engine(connection_string, echo=True)
+# SQL Server / SQLite Connection (configurable)
+database_url = os.environ.get('DATABASE_URL') or os.environ.get('SQL_SERVER_CONNECTION_STRING')
+engine = create_engine(database_url, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
