@@ -426,7 +426,72 @@ async def render_templates(render_request: TemplateRenderRequest, db: Session = 
         fields=all_fields
     )
 
-# Change log endpoints
+# Advanced validation endpoint
+@api_router.post("/validate-field")
+async def validate_field_value(
+    field_id: str, 
+    value: Any, 
+    db: Session = Depends(get_db)
+):
+    """Validate a field value using advanced validation rules"""
+    field = db.query(Field).filter(Field.id == field_id).first()
+    if not field:
+        raise HTTPException(status_code=404, detail="Field not found")
+    
+    validator = AdvancedValidator()
+    result = validator.validate_value(value, field.validation or {})
+    
+    return {
+        "field_id": field_id,
+        "value": value,
+        "valid": result["valid"],
+        "errors": result["errors"]
+    }
+
+# Get validation schema for field type
+@api_router.get("/validation-schema/{field_type}")
+async def get_validation_schema(field_type: str):
+    """Get available validation options for a field type"""
+    validator = AdvancedValidator()
+    schema = validator.get_validation_schema(field_type)
+    
+    return {
+        "field_type": field_type,
+        "validation_options": schema
+    }
+
+# Simulate template with field values (for dependency testing)
+@api_router.post("/templates/simulate")
+async def simulate_template_with_values(
+    template_id: str,
+    role: UserRole,
+    field_values: Dict[str, Any],
+    customer_id: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Simulate template rendering with specific field values for dependency testing"""
+    template = db.query(Template).filter(Template.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    
+    dep_engine = DependencyEngine(db)
+    rendered_template = dep_engine.render_template_for_role(
+        template=template,
+        role=role,
+        customer_id=customer_id,
+        field_values=field_values
+    )
+    
+    return {
+        "template": rendered_template,
+        "field_values": field_values,
+        "visible_field_count": len(rendered_template.get('fields', [])),
+        "simulation_info": {
+            "role": role,
+            "customer_id": customer_id,
+            "dependencies_processed": True
+        }
+    }
 @api_router.get("/changelog", response_model=List[ChangeLogResponse])
 async def get_changelog(limit: int = 100, entity_type: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(ChangeLogEntry)
