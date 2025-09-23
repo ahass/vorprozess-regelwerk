@@ -8,6 +8,7 @@ const Layout = ({ children }) => {
 
   const navigation = [
     { name: 'Schablonen-Builder', name_fr: 'Générateur de modèles', name_it: 'Generatore di modelli', path: '/builder', icon: '🛠️' },
+    { name: 'Erweitert Builder', name_fr: 'Constructeur avancé', name_it: 'Costruttore avanzato', path: '/enhanced-builder', icon: '⚡' },
     { name: 'Übersicht', name_fr: 'Aperçu', name_it: 'Panoramica', path: '/overview', icon: '📋' },
     { name: 'Simulator', name_fr: 'Simulateur', name_it: 'Simulatore', path: '/simulator', icon: '🎮' },
     { name: 'Änderungsprotokoll', name_fr: 'Journal des modifications', name_it: 'Registro delle modifiche', path: '/changelog', icon: '📜' }
