@@ -198,7 +198,6 @@ public class TemplateService : ITemplateService
 
         var fieldIds = template.TemplateFields.Select(tf => tf.FieldId).ToList();
         var fields = await _context.Fields
-            .Include(f => f.Names)
             .Where(f => fieldIds.Contains(f.Id))
             .ToListAsync();
 
