@@ -244,6 +244,26 @@ public class TemplateService : ITemplateService
             .Where(f => fieldIds.Contains(f.Id))
             .ToListAsync();
 
+        // Enrich fields with names
+        var fieldNameLookup = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "field_name" && fieldIds.Contains(t.EntityId))
+            .GroupBy(t => t.EntityId)
+            .ToDictionaryAsync(g => g.Key, g => g.ToDictionary(x => x.LanguageCode, x => x.TextValue));
+
+        foreach (var field in fields)
+        {
+            if (fieldNameLookup.TryGetValue(field.Id, out var names))
+            {
+                field.Names = names.Select(kvp => new MultiLanguageText
+                {
+                    EntityType = "field_name",
+                    EntityId = field.Id,
+                    LanguageCode = kvp.Key,
+                    TextValue = kvp.Value
+                }).ToList();
+            }
+        }
+
         var renderedTemplate = _dependencyEngine.RenderTemplateForRole(
             template,
             fields,
