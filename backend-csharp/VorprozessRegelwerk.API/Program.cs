@@ -46,7 +46,7 @@ else
 }
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Register Services
 builder.Services.AddScoped<ITemplateService, TemplateService>();
