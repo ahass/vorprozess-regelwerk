@@ -277,7 +277,7 @@ REACT_APP_BACKEND_URL=<extern konfiguriert>
 
 ## 📄 Lizenz & Support
 
-- Dokumentation: diese README.md
+- Dokumentation: diese README.md, sowie das Benutzerhandbuch unter ./docs/Benutzerhandbuch.md
 - Issues/Feature Requests: Ihr Quellcode-Repository
 - Betrieb: Bitte die oben genannten Service-/URL-Regeln beachten
 
