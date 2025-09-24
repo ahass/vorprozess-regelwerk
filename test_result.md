@@ -102,6 +102,88 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
+
+---
+user_problem_statement: >-
+  Switch to C# ASP.NET Core backend (SQLite) and deprecate FastAPI. Perform smoke tests
+  and ensure the API contract remains compatible with the existing React frontend.
+backend:
+  - task: "C# Backend build and run on 0.0.0.0:8001 (SQLite)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Program.cs"
+    stuck_count: 0
+    priority: "highest"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Installed .NET 8 SDK, fixed EF Core relationship issue with MultiLanguageText, adjusted nvarchar(max)->TEXT for SQLite, started ASP.NET Core on :8001. Preparing automated tests."
+  - task: "C# Templates API (list/get/create/update/delete/render/simulate)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/TemplatesController.cs"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Smoke test after EF fix and SQLite compatibility changes."
+  - task: "C# Fields API (list/get/create/update/delete/validate-field/validation-schema)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/FieldsController.cs"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Smoke test after EF fix and SQLite compatibility changes."
+  - task: "C# ChangeLog API (list/entity-history)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/ChangeLogController.cs"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Verify log entries after CRUD ops." 
+frontend:
+  - task: "React pages work against C# backend"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "After backend switch, verify pages load data without console/network errors."
+metadata:
+  created_by: "main_agent"
+  version: "1.1"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "C# backend smoke tests for all critical endpoints"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: >-
+      C# backend is running on :8001 with SQLite. Proceeding with automated backend tests
+      to validate endpoints and contracts. Frontend tests will follow after backend passes.
+---
+
 ---
 user_problem_statement: >-
   Final API compatibility check between the migrated C# ASP.NET Core backend and the existing React frontend.
