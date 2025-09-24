@@ -13,7 +13,8 @@ from datetime import datetime
 
 # Get backend URL from environment
 BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'https://form-wizard-api.preview.emergentagent.com')
-API_BASE_URL = f"{BACKEND_URL}/api"
+# For testing, use localhost since C# backend is running locally
+API_BASE_URL = "http://localhost:8001/api"
 
 class BackendTester:
     def __init__(self):
