@@ -409,31 +409,31 @@ class BackendTester:
                               f"HTTP {response.status_code}", response.text)
                 
         except Exception as e:
-            self.log_result("POST /api/validate-field", False, f"Exception: {str(e)}")
+            self.log_result("POST /api/fields/validate-field", False, f"Exception: {str(e)}")
 
         # Test with non-existent field (should return 404)
         try:
             params = {
-                "field_id": "non-existent-field-id",
+                "fieldId": "non-existent-field-id",
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/validate-field", params=params)
+            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params)
             
             if response.status_code == 404:
                 data = response.json()
-                if 'detail' in data:
-                    self.log_result("POST /api/validate-field (404 test)", True, 
-                                  "Correctly returned 404 with detail for non-existent field")
+                if 'message' in data:
+                    self.log_result("POST /api/fields/validate-field (404 test)", True, 
+                                  "Correctly returned 404 with message for non-existent field")
                 else:
-                    self.log_result("POST /api/validate-field (404 test)", False, 
-                                  "404 response missing detail field", data)
+                    self.log_result("POST /api/fields/validate-field (404 test)", False, 
+                                  "404 response missing message field", data)
             else:
-                self.log_result("POST /api/validate-field (404 test)", False, 
+                self.log_result("POST /api/fields/validate-field (404 test)", False, 
                               f"Expected 404, got {response.status_code}", response.text)
                 
         except Exception as e:
-            self.log_result("POST /api/validate-field (404 test)", False, f"Exception: {str(e)}")
+            self.log_result("POST /api/fields/validate-field (404 test)", False, f"Exception: {str(e)}")
 
     def test_validation_schema(self):
         """Test GET /api/validation-schema/{fieldType}"""
