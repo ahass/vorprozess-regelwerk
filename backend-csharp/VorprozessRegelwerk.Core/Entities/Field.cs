@@ -19,7 +19,7 @@ public class Field
     [Required]
     public FieldRequirement Requirement { get; set; } = FieldRequirement.Optional;
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string Validation { get; set; } = "{}";
 
     public SelectType? SelectType { get; set; }
