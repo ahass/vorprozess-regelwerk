@@ -40,7 +40,7 @@ public class Field
     [Column(TypeName = "TEXT")]
     public string VisibleForCustomers { get; set; } = "[]";
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string Dependencies { get; set; } = "[]";
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
