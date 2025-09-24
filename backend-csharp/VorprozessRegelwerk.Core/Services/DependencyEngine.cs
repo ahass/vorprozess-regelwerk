@@ -241,7 +241,8 @@ public class DependencyEngine
 
     private static Dictionary<string, string> GetTemplateNames(Template template)
     {
-        return template.Names.ToDictionary(n => n.LanguageCode, n => n.TextValue);
+        // In EF-Konfiguration nicht gemappt – Namen werden aus MultiLanguageTexts im Service zugewiesen
+        return new Dictionary<string, string>();
     }
 
     private static Dictionary<string, string> GetTemplateDescriptions(Template template)
