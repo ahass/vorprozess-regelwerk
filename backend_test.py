@@ -334,12 +334,10 @@ class BackendTester:
         try:
             # Test with existing template
             params = {
-                "template_id": self.created_template_id,
+                "templateId": self.created_template_id,
                 "role": "anmelder"
             }
-            simulate_data = {
-                "field_values": {}
-            }
+            simulate_data = {}
             
             response = self.session.post(f"{API_BASE_URL}/templates/simulate", 
                                        params=params, json=simulate_data)
