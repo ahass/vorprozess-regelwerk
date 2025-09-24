@@ -247,6 +247,7 @@ public class DependencyEngine
 
     private static Dictionary<string, string> GetTemplateDescriptions(Template template)
     {
-        return template.Descriptions.ToDictionary(n => n.LanguageCode, n => n.TextValue);
+        // In EF-Konfiguration nicht gemappt – Beschreibungen werden aus MultiLanguageTexts im Service zugewiesen
+        return new Dictionary<string, string>();
     }
 }
