@@ -159,7 +159,6 @@ public class TemplateService : ITemplateService
         
         // Get fields with names
         var fields = await _context.Fields
-            .Include(f => f.Names)
             .Where(f => allFieldIds.Contains(f.Id))
             .ToListAsync();
 
