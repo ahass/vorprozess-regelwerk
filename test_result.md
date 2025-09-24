@@ -109,37 +109,46 @@ user_problem_statement: >-
 backend:
   - task: "Templates API (list/get/create/update/delete/render/simulate)"
     implemented: true
-    working: NA
-    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/TemplatesController.cs"
+    working: true
+    file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: NA
         agent: "main"
         comment: "Initiating final API compatibility testing for Templates endpoints."
+      - working: true
+        agent: "testing"
+        comment: "✅ All Templates API endpoints working correctly: GET /api/templates (returns array with correct multilingual structure), POST /api/templates (creates with 201/200 and returns ID), GET /api/templates/{id} (retrieves by ID), PUT /api/templates/{id} (updates correctly), DELETE /api/templates/{id} (deletes and returns 404 on subsequent GET), POST /api/templates/render (returns templates and fields arrays), POST /api/templates/simulate (returns simulation data with visible_field_count, correctly returns 404 for non-existent templates). All endpoints use correct /api prefix and work with REACT_APP_BACKEND_URL."
   - task: "Fields API (list/get/create/update/delete/validate-field/validation-schema)"
     implemented: true
-    working: NA
-    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/FieldsController.cs"
+    working: true
+    file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: NA
         agent: "main"
         comment: "Initiating final API compatibility testing for Fields endpoints."
+      - working: true
+        agent: "testing"
+        comment: "✅ All Fields API endpoints working correctly: GET /api/fields (returns array with correct structure including multilingual names, type, visibility, requirement, validation, dependencies, role_config, etc.), POST /api/fields (creates with multilingual payload and returns ID), PUT /api/fields/{id} (updates correctly), DELETE /api/fields/{id} (deletes and returns 404 on subsequent GET), POST /api/validate-field (validates field values with field_id and value as query params, returns valid/errors, correctly returns 404 for non-existent fields), GET /api/validation-schema/{fieldType} (returns validation options for field types). Minor: validation-schema returns 200 with empty options for unknown types instead of 4xx, but this is acceptable behavior."
   - task: "ChangeLog API (list/entity-history)"
     implemented: true
-    working: NA
-    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/ChangeLogController.cs"
+    working: true
+    file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: NA
         agent: "main"
         comment: "Initiating final API compatibility testing for ChangeLog endpoints."
+      - working: true
+        agent: "testing"
+        comment: "✅ ChangeLog API endpoints working correctly: GET /api/changelog (returns array of changelog entries with correct structure including id, entity_type, entity_id, action, changes, user_id, user_name, timestamp), GET /api/changelog/{entityId} (returns entity-specific changelog entries). All endpoints properly log CRUD operations on templates and fields."
 frontend:
   - task: "TemplateOverview page loads templates from /api/templates"
     implemented: true
