@@ -62,10 +62,8 @@ public class ApplicationDbContext : DbContext
                   .HasForeignKey(e => e.FieldId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasMany(e => e.Names)
-                  .WithOne(e => e.Field)
-                  .HasForeignKey(e => e.EntityId)
-                  .OnDelete(DeleteBehavior.Cascade);
+            // Navigations zu MultiLanguageText werden nicht als EF-Relationen gemappt.
+            entity.Ignore(e => e.Names);
         });
 
         // TemplateField configuration (Many-to-Many junction)
