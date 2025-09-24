@@ -150,8 +150,6 @@ public class TemplateService : ITemplateService
     public async Task<TemplateRenderResponseDto> RenderTemplatesAsync(TemplateRenderRequestDto renderRequest)
     {
         var templates = await _context.Templates
-            .Include(t => t.Names)
-            .Include(t => t.Descriptions)
             .Include(t => t.TemplateFields)
             .Where(t => renderRequest.TemplateIds.Contains(t.Id))
             .ToListAsync();
