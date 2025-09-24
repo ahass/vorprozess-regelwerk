@@ -9,7 +9,7 @@ public class Template
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string RoleConfig { get; set; } = "{}";
 
     public bool CustomerSpecific { get; set; } = false;
