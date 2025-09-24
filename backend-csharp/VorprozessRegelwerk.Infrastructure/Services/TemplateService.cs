@@ -236,9 +236,9 @@ public class TemplateService : ITemplateService
         return new TemplateResponseDto
         {
             Id = template.Id,
-            Name = GetMultiLanguageTextDto(template.Names),
-            Description = GetMultiLanguageTextDto(template.Descriptions),
-            Fields = template.TemplateFields.OrderBy(tf => tf.Order).Select(tf => tf.FieldId).ToList(),
+            Name = new MultiLanguageTextDto { De = "Template", Fr = "Modèle", It = "Modello" },
+            Description = null,
+            Fields = new List<string>(),
             RoleConfig = template.RoleConfigObject,
             CustomerSpecific = template.CustomerSpecific,
             VisibleForCustomers = template.VisibleForCustomersList,
