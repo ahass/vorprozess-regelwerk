@@ -14,7 +14,7 @@ public class Template
 
     public bool CustomerSpecific { get; set; } = false;
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string VisibleForCustomers { get; set; } = "[]";
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
