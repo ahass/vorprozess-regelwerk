@@ -360,12 +360,10 @@ class BackendTester:
         # Test with non-existent template (should return 404)
         try:
             params = {
-                "template_id": "non-existent-id",
+                "templateId": "non-existent-id",
                 "role": "anmelder"
             }
-            simulate_data = {
-                "field_values": {}
-            }
+            simulate_data = {}
             
             response = self.session.post(f"{API_BASE_URL}/templates/simulate", 
                                        params=params, json=simulate_data)
