@@ -101,8 +101,8 @@ class BackendTester:
                     if data:
                         field = data[0]
                         required_fields = ['id', 'name', 'type', 'visibility', 'requirement', 
-                                         'validation', 'role_config', 'customer_specific', 
-                                         'visible_for_customers', 'dependencies', 'created_at', 'updated_at']
+                                         'validation', 'roleConfig', 'customerSpecific', 
+                                         'visibleForCustomers', 'dependencies', 'createdAt', 'updatedAt']
                         missing_fields = [field_name for field_name in required_fields if field_name not in field]
                         
                         if missing_fields:
