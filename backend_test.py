@@ -412,11 +412,13 @@ class BackendTester:
         # Test with non-existent field (should return 404)
         try:
             params = {
-                "fieldId": "non-existent-field-id",
+                "fieldId": "non-existent-field-id"
+            }
+            body = {
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params)
+            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params, json=body)
             
             if response.status_code == 404:
                 data = response.json()
