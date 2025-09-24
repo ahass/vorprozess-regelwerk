@@ -1,0 +1,5 @@
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.csproj.AssemblyReference.cache
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.GeneratedMSBuildEditorConfig.editorconfig
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.AssemblyInfoInputs.cache
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.AssemblyInfo.cs
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.csproj.CoreCompileInputs.cache
