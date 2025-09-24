@@ -37,7 +37,7 @@ public class Field
 
     public bool CustomerSpecific { get; set; } = false;
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string VisibleForCustomers { get; set; } = "[]";
 
     [Column(TypeName = "nvarchar(max)")]
