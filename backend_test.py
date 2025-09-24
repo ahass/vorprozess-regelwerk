@@ -398,14 +398,14 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if 'valid' in data and 'field_id' in data:
-                    self.log_result("POST /api/validate-field", True, 
+                if 'valid' in data and 'fieldId' in data:
+                    self.log_result("POST /api/fields/validate-field", True, 
                                   f"Validated field value, result: {data.get('valid')}")
                 else:
-                    self.log_result("POST /api/validate-field", False, 
+                    self.log_result("POST /api/fields/validate-field", False, 
                                   "Response missing expected validation fields", data)
             else:
-                self.log_result("POST /api/validate-field", False, 
+                self.log_result("POST /api/fields/validate-field", False, 
                               f"HTTP {response.status_code}", response.text)
                 
         except Exception as e:
