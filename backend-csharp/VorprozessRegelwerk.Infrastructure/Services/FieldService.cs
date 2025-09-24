@@ -43,7 +43,6 @@ public class FieldService : IFieldService
     public async Task<FieldResponseDto?> GetFieldByIdAsync(string id)
     {
         var field = await _context.Fields
-            .Include(f => f.Names)
             .FirstOrDefaultAsync(f => f.Id == id);
 
         return field != null ? MapToResponseDto(field) : null;
