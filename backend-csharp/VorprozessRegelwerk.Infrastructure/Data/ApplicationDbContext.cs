@@ -30,15 +30,29 @@ public class ApplicationDbContext : DbContext
                   .HasForeignKey(e => e.TemplateId)
                   .OnDelete(DeleteBehavior.Cascade);
 
+            // Template: Names = MultiLanguageText mit EntityType = "template_name"
             entity.HasMany(e => e.Names)
-                  .WithOne(e => e.Template)
-                  .HasForeignKey(e => e.EntityId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .WithMany()
+                  .UsingEntity<MultiLanguageText>(
+                      r => r.HasOne<Template>().WithMany().HasForeignKey(x => x.EntityId),
+                      l => l.HasOne<MultiLanguageText>().WithMany(),
+                      je =>
+                      {
+                          je.ToTable("MultiLanguageTexts");
+                      }
+                  );
 
+            // Template: Descriptions = MultiLanguageText mit EntityType = "template_description"
             entity.HasMany(e => e.Descriptions)
-                  .WithOne(e => e.Template)
-                  .HasForeignKey(e => e.EntityId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .WithMany()
+                  .UsingEntity<MultiLanguageText>(
+                      r => r.HasOne<Template>().WithMany().HasForeignKey(x => x.EntityId),
+                      l => l.HasOne<MultiLanguageText>().WithMany(),
+                      je =>
+                      {
+                          je.ToTable("MultiLanguageTexts");
+                      }
+                  );
         });
 
         // Field configuration
