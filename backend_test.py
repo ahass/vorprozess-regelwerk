@@ -383,18 +383,18 @@ class BackendTester:
             self.log_result("POST /api/templates/simulate (404 test)", False, f"Exception: {str(e)}")
 
     def test_validate_field(self):
-        """Test POST /api/validate-field (note: different from review request path)"""
+        """Test POST /api/fields/validate-field"""
         if not self.created_field_id:
-            self.log_result("POST /api/validate-field", False, "No field ID available for testing")
+            self.log_result("POST /api/fields/validate-field", False, "No field ID available for testing")
             return
             
         try:
             params = {
-                "field_id": self.created_field_id,
+                "fieldId": self.created_field_id,
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/validate-field", params=params)
+            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params)
             
             if response.status_code == 200:
                 data = response.json()
