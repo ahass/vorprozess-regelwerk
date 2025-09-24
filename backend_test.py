@@ -386,11 +386,13 @@ class BackendTester:
             
         try:
             params = {
-                "fieldId": self.created_field_id,
+                "fieldId": self.created_field_id
+            }
+            body = {
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params)
+            response = self.session.post(f"{API_BASE_URL}/fields/validate-field", params=params, json=body)
             
             if response.status_code == 200:
                 data = response.json()
