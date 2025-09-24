@@ -101,3 +101,119 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+---
+user_problem_statement: >-
+  Final API compatibility check between the migrated C# ASP.NET Core backend and the existing React frontend.
+  Ensure all routes are prefixed with /api and that the frontend only calls the backend via REACT_APP_BACKEND_URL.
+backend:
+  - task: "Templates API (list/get/create/update/delete/render/simulate)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/TemplatesController.cs"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Initiating final API compatibility testing for Templates endpoints."
+  - task: "Fields API (list/get/create/update/delete/validate-field/validation-schema)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/FieldsController.cs"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Initiating final API compatibility testing for Fields endpoints."
+  - task: "ChangeLog API (list/entity-history)"
+    implemented: true
+    working: NA
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/Controllers/ChangeLogController.cs"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Initiating final API compatibility testing for ChangeLog endpoints."
+frontend:
+  - task: "TemplateOverview page loads templates from /api/templates"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/TemplateOverview.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Will verify list render and API call."
+  - task: "TemplateBuilder basic CRUD via /api/templates and /api/fields"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/TemplateBuilder.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Will verify create/update/delete flows minimally."
+  - task: "EnhancedTemplateBuilder tabs render and data flows"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/EnhancedTemplateBuilder.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Will verify Builder/Simulator/Dependencies tabs load and basic interactions."
+  - task: "RoleSimulator uses /api/templates/simulate"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/RoleSimulator.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Will verify simulation request and visible fields count display."
+  - task: "ChangeLog page loads from /api/changelog"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/ChangeLog.js"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: true
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Will verify changelog list fetch."
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Final API compatibility check (C# backend + React frontend)"
+    - "Critical endpoints alignment vs README"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: >-
+      Updating test plan and invoking automated backend tests first; after backend results,
+      UI tests will be executed as requested by user. Ensure all API routes use /api prefix and
+      frontend uses REACT_APP_BACKEND_URL.
+---
