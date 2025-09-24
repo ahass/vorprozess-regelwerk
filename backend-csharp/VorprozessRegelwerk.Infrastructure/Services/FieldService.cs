@@ -35,7 +35,6 @@ public class FieldService : IFieldService
     public async Task<IEnumerable<FieldResponseDto>> GetAllFieldsAsync()
     {
         var fields = await _context.Fields
-            .Include(f => f.Names)
             .ToListAsync();
 
         return fields.Select(MapToResponseDto);
