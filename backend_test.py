@@ -396,7 +396,7 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if 'valid' in data and 'fieldId' in data:
+                if 'valid' in data and 'field_id' in data:
                     self.log_result("POST /api/fields/validate-field", True, 
                                   f"Validated field value, result: {data.get('valid')}")
                 else:
