@@ -225,12 +225,20 @@ public class TemplateService : ITemplateService
 
     private TemplateResponseDto MapToResponseDto(Template template)
     {
+        var nameDict = _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "template_name" && t.EntityId == template.Id)
+            .ToDictionary(t => t.LanguageCode, t => t.TextValue);
+
+        var descDict = _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "template_description" && t.EntityId == template.Id)
+            .ToDictionary(t => t.LanguageCode, t => t.TextValue);
+
         return new TemplateResponseDto
         {
             Id = template.Id,
-            Name = new MultiLanguageTextDto { De = "Template", Fr = "Modèle", It = "Modello" },
-            Description = null,
-            Fields = new List<string>(),
+            Name = MultiLanguageTextDto.FromDictionary(nameDict),
+            Description = descDict.Any() ? MultiLanguageTextDto.FromDictionary(descDict) : null,
+            Fields = template.TemplateFields.Select(tf => tf.FieldId).ToList(),
             RoleConfig = template.RoleConfigObject,
             CustomerSpecific = template.CustomerSpecific,
             VisibleForCustomers = template.VisibleForCustomersList,
