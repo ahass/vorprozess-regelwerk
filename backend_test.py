@@ -389,14 +389,11 @@ class BackendTester:
             
         try:
             params = {
-                "field_id": self.created_field_id
-            }
-            validate_data = {
+                "field_id": self.created_field_id,
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/validate-field", 
-                                       params=params, json=validate_data)
+            response = self.session.post(f"{API_BASE_URL}/validate-field", params=params)
             
             if response.status_code == 200:
                 data = response.json()
@@ -416,23 +413,20 @@ class BackendTester:
         # Test with non-existent field (should return 404)
         try:
             params = {
-                "field_id": "non-existent-field-id"
-            }
-            validate_data = {
+                "field_id": "non-existent-field-id",
                 "value": "test value"
             }
             
-            response = self.session.post(f"{API_BASE_URL}/validate-field", 
-                                       params=params, json=validate_data)
+            response = self.session.post(f"{API_BASE_URL}/validate-field", params=params)
             
             if response.status_code == 404:
                 data = response.json()
-                if 'message' in data:
+                if 'detail' in data:
                     self.log_result("POST /api/validate-field (404 test)", True, 
-                                  "Correctly returned 404 with message for non-existent field")
+                                  "Correctly returned 404 with detail for non-existent field")
                 else:
                     self.log_result("POST /api/validate-field (404 test)", False, 
-                                  "404 response missing message field", data)
+                                  "404 response missing detail field", data)
             else:
                 self.log_result("POST /api/validate-field (404 test)", False, 
                               f"Expected 404, got {response.status_code}", response.text)
