@@ -24,7 +24,7 @@ public class Field
 
     public SelectType? SelectType { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string Options { get; set; } = "[]";
 
     public DocumentMode? DocumentMode { get; set; }
