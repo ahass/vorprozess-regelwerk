@@ -29,7 +29,7 @@ public class Field
 
     public DocumentMode? DocumentMode { get; set; }
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string DocumentConstraints { get; set; } = "{}";
 
     [Column(TypeName = "nvarchar(max)")]
