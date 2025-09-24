@@ -30,29 +30,10 @@ public class ApplicationDbContext : DbContext
                   .HasForeignKey(e => e.TemplateId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            // Template: Names = MultiLanguageText mit EntityType = "template_name"
-            entity.HasMany(e => e.Names)
-                  .WithMany()
-                  .UsingEntity<MultiLanguageText>(
-                      r => r.HasOne<Template>().WithMany().HasForeignKey(x => x.EntityId),
-                      l => l.HasOne<MultiLanguageText>().WithMany(),
-                      je =>
-                      {
-                          je.ToTable("MultiLanguageTexts");
-                      }
-                  );
-
-            // Template: Descriptions = MultiLanguageText mit EntityType = "template_description"
-            entity.HasMany(e => e.Descriptions)
-                  .WithMany()
-                  .UsingEntity<MultiLanguageText>(
-                      r => r.HasOne<Template>().WithMany().HasForeignKey(x => x.EntityId),
-                      l => l.HasOne<MultiLanguageText>().WithMany(),
-                      je =>
-                      {
-                          je.ToTable("MultiLanguageTexts");
-                      }
-                  );
+            // Navigations zu MultiLanguageText werden nicht als EF-Relationen gemappt.
+            // Die Collections werden zur Laufzeit in den Services manuell befüllt.
+            entity.Ignore(e => e.Names);
+            entity.Ignore(e => e.Descriptions);
         });
 
         // Field configuration
