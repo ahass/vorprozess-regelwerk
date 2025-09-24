@@ -3,3 +3,10 @@
 /app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.AssemblyInfoInputs.cache
 /app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.AssemblyInfo.cs
 /app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.csproj.CoreCompileInputs.cache
+/app/backend-csharp/VorprozessRegelwerk.Core/bin/Debug/net8.0/VorprozessRegelwerk.Core.deps.json
+/app/backend-csharp/VorprozessRegelwerk.Core/bin/Debug/net8.0/VorprozessRegelwerk.Core.dll
+/app/backend-csharp/VorprozessRegelwerk.Core/bin/Debug/net8.0/VorprozessRegelwerk.Core.pdb
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.dll
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/refint/VorprozessRegelwerk.Core.dll
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/VorprozessRegelwerk.Core.pdb
+/app/backend-csharp/VorprozessRegelwerk.Core/obj/Debug/net8.0/ref/VorprozessRegelwerk.Core.dll
