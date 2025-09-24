@@ -58,8 +58,8 @@ class BackendTester:
                     # Check structure of first template if any exist
                     if data:
                         template = data[0]
-                        required_fields = ['id', 'name', 'description', 'fields', 'role_config', 
-                                         'customer_specific', 'visible_for_customers', 'created_at', 'updated_at']
+                        required_fields = ['id', 'name', 'description', 'fields', 'roleConfig', 
+                                         'customerSpecific', 'visibleForCustomers', 'createdAt', 'updatedAt']
                         missing_fields = [field for field in required_fields if field not in template]
                         
                         if missing_fields:
