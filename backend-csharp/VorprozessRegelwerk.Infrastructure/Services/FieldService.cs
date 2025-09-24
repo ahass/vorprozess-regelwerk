@@ -72,7 +72,7 @@ public class FieldService : IFieldService
             field.OptionsList = fieldDto.Options.Select(opt => new SelectOption
             {
                 Id = opt.Id,
-                Label = opt.Label,
+                Label = new MultiLanguageText(), // Placeholder, wird später gesetzt
                 Value = opt.Value
             }).ToList();
         }
