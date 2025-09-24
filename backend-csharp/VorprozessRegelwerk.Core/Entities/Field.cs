@@ -48,6 +48,7 @@ public class Field
 
     // Navigation properties
     public virtual ICollection<TemplateField> TemplateFields { get; set; } = new List<TemplateField>();
+    // Diese Navigation wird nicht von EF gemappt; Services lesen MultiLanguageTexts manuell
     public virtual ICollection<MultiLanguageText> Names { get; set; } = new List<MultiLanguageText>();
 
     // Helper properties
