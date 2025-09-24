@@ -192,8 +192,6 @@ public class TemplateService : ITemplateService
     public async Task<object> SimulateTemplateAsync(string templateId, UserRole role, Dictionary<string, object> fieldValues, string? customerId = null)
     {
         var template = await _context.Templates
-            .Include(t => t.Names)
-            .Include(t => t.Descriptions)
             .Include(t => t.TemplateFields)
             .FirstOrDefaultAsync(t => t.Id == templateId);
 
