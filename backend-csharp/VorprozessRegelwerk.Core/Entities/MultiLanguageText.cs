@@ -25,12 +25,9 @@ public class MultiLanguageText
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation properties
-    [ForeignKey(nameof(EntityId))]
-    public virtual Template? Template { get; set; }
-
-    [ForeignKey(nameof(EntityId))]
-    public virtual Field? Field { get; set; }
+    // Keine direkten Navigationseigenschaften.
+    // Beziehungen werden in ApplicationDbContext per zusammengesetztem Schlüssel (EntityId + EntityType)
+    // zu Template/Field konfiguriert, um Namens- und Beschreibungstexte sauber zu trennen.
 }
 
 // Helper class for multilanguage text operations
