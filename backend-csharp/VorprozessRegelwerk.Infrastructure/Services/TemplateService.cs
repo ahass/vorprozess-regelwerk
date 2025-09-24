@@ -162,10 +162,53 @@ public class TemplateService : ITemplateService
             .Where(f => allFieldIds.Contains(f.Id))
             .ToListAsync();
 
+        // Enrich fields with names from MultiLanguageTexts
+        var fieldNameLookup = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "field_name" && allFieldIds.Contains(t.EntityId))
+            .GroupBy(t => t.EntityId)
+            .ToDictionaryAsync(g => g.Key, g => g.ToDictionary(x => x.LanguageCode, x => x.TextValue));
+
+        foreach (var field in fields)
+        {
+            if (fieldNameLookup.TryGetValue(field.Id, out var names))
+            {
+                field.Names = names.Select(kvp => new MultiLanguageText
+                {
+                    EntityType = "field_name",
+                    EntityId = field.Id,
+                    LanguageCode = kvp.Key,
+                    TextValue = kvp.Value
+                }).ToList();
+            }
+        }
+
         // Process each template with dependency engine
         var templateResponses = new List<object>();
         foreach (var template in templates)
         {
+            // Enrich template with names/descriptions
+            var nameDict = await _context.MultiLanguageTexts
+                .Where(t => t.EntityType == "template_name" && t.EntityId == template.Id)
+                .ToDictionaryAsync(t => t.LanguageCode, t => t.TextValue);
+            template.Names = nameDict.Select(kvp => new MultiLanguageText
+            {
+                EntityType = "template_name",
+                EntityId = template.Id,
+                LanguageCode = kvp.Key,
+                TextValue = kvp.Value
+            }).ToList();
+
+            var descDict = await _context.MultiLanguageTexts
+                .Where(t => t.EntityType == "template_description" && t.EntityId == template.Id)
+                .ToDictionaryAsync(t => t.LanguageCode, t => t.TextValue);
+            template.Descriptions = descDict.Select(kvp => new MultiLanguageText
+            {
+                EntityType = "template_description",
+                EntityId = template.Id,
+                LanguageCode = kvp.Key,
+                TextValue = kvp.Value
+            }).ToList();
+
             var renderedTemplate = _dependencyEngine.RenderTemplateForRole(
                 template,
                 fields,
