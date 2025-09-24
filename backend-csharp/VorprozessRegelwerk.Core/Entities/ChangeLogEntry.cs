@@ -20,7 +20,7 @@ public class ChangeLogEntry
     [MaxLength(20)]
     public string Action { get; set; } = string.Empty; // "created", "updated", "deleted"
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string Changes { get; set; } = "{}";
 
     [Required]
