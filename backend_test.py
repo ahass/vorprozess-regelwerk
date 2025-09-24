@@ -436,39 +436,39 @@ class BackendTester:
             self.log_result("POST /api/fields/validate-field (404 test)", False, f"Exception: {str(e)}")
 
     def test_validation_schema(self):
-        """Test GET /api/validation-schema/{fieldType}"""
+        """Test GET /api/fields/validation-schema/{fieldType}"""
         try:
             # Test with known field type
-            response = self.session.get(f"{API_BASE_URL}/validation-schema/text")
+            response = self.session.get(f"{API_BASE_URL}/fields/validation-schema/text")
             
             if response.status_code == 200:
                 data = response.json()
                 if 'field_type' in data and 'validation_options' in data:
-                    self.log_result("GET /api/validation-schema/{fieldType}", True, 
+                    self.log_result("GET /api/fields/validation-schema/{fieldType}", True, 
                                   f"Retrieved validation schema for text field")
                 else:
-                    self.log_result("GET /api/validation-schema/{fieldType}", False, 
+                    self.log_result("GET /api/fields/validation-schema/{fieldType}", False, 
                                   "Response missing expected schema fields", data)
             else:
-                self.log_result("GET /api/validation-schema/{fieldType}", False, 
+                self.log_result("GET /api/fields/validation-schema/{fieldType}", False, 
                               f"HTTP {response.status_code}", response.text)
                 
         except Exception as e:
-            self.log_result("GET /api/validation-schema/{fieldType}", False, f"Exception: {str(e)}")
+            self.log_result("GET /api/fields/validation-schema/{fieldType}", False, f"Exception: {str(e)}")
 
         # Test with unknown field type
         try:
-            response = self.session.get(f"{API_BASE_URL}/validation-schema/unknown-type")
+            response = self.session.get(f"{API_BASE_URL}/fields/validation-schema/unknown-type")
             
             if response.status_code >= 400 and response.status_code < 500:
-                self.log_result("GET /api/validation-schema/{fieldType} (4xx test)", True, 
+                self.log_result("GET /api/fields/validation-schema/{fieldType} (4xx test)", True, 
                               f"Correctly returned {response.status_code} for unknown field type")
             else:
-                self.log_result("GET /api/validation-schema/{fieldType} (4xx test)", False, 
+                self.log_result("GET /api/fields/validation-schema/{fieldType} (4xx test)", False, 
                               f"Expected 4xx, got {response.status_code}", response.text)
                 
         except Exception as e:
-            self.log_result("GET /api/validation-schema/{fieldType} (4xx test)", False, f"Exception: {str(e)}")
+            self.log_result("GET /api/fields/validation-schema/{fieldType} (4xx test)", False, f"Exception: {str(e)}")
 
     def test_changelog(self):
         """Test GET /api/changelog"""
