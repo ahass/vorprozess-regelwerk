@@ -32,7 +32,7 @@ public class Field
     [Column(TypeName = "TEXT")]
     public string DocumentConstraints { get; set; } = "{}";
 
-    [Column(TypeName = "nvarchar(max)")]
+    [Column(TypeName = "TEXT")]
     public string RoleConfig { get; set; } = "{}";
 
     public bool CustomerSpecific { get; set; } = false;
