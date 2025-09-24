@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VorprozessRegelwerk.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6145d22af2ff2caa2c3b8d8e68fb50e5ccda051f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acdb6b552f344d46f0baa0986b650438375ce454")]
 [assembly: System.Reflection.AssemblyProductAttribute("VorprozessRegelwerk.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VorprozessRegelwerk.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
