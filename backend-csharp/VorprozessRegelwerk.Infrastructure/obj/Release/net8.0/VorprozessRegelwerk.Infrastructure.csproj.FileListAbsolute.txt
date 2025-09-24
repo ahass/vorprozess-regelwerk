@@ -1,0 +1,15 @@
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/bin/Release/net8.0/VorprozessRegelwerk.Infrastructure.deps.json
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/bin/Release/net8.0/VorprozessRegelwerk.Infrastructure.dll
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/bin/Release/net8.0/VorprozessRegelwerk.Infrastructure.pdb
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/bin/Release/net8.0/VorprozessRegelwerk.Core.dll
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/bin/Release/net8.0/VorprozessRegelwerk.Core.pdb
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.csproj.AssemblyReference.cache
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.AssemblyInfoInputs.cache
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.AssemblyInfo.cs
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.csproj.CoreCompileInputs.cache
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/Vorproze.1155AF3A.Up2Date
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.dll
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/refint/VorprozessRegelwerk.Infrastructure.dll
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/VorprozessRegelwerk.Infrastructure.pdb
+/app/backend-csharp/VorprozessRegelwerk.Infrastructure/obj/Release/net8.0/ref/VorprozessRegelwerk.Infrastructure.dll

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/VorprozessRegelwerk.API.props" />
+</Project>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "1G8zblvQMpF2rWcgnrphB7GPRUmjTWoa3ZeOtmxy+Es=",
+  "Source": "VorprozessRegelwerk.API",
+  "BasePath": "_content/VorprozessRegelwerk.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
