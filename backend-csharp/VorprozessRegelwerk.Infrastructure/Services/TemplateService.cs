@@ -41,8 +41,6 @@ public class TemplateService : ITemplateService
     public async Task<TemplateResponseDto?> GetTemplateByIdAsync(string id)
     {
         var template = await _context.Templates
-            .Include(t => t.Names)
-            .Include(t => t.Descriptions)
             .Include(t => t.TemplateFields)
             .FirstOrDefaultAsync(t => t.Id == id);
 
