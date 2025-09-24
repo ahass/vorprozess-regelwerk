@@ -263,7 +263,7 @@ public class FieldService : IFieldService
             Options = field.OptionsList.Select(opt => new Dictionary<string, object>
             {
                 ["id"] = opt.Id,
-                ["label"] = opt.Label.ToDictionary(),
+                ["label"] = new Dictionary<string, string>(), // Placeholder for multilang
                 ["value"] = opt.Value
             }).ToList(),
             DocumentMode = field.DocumentMode,
