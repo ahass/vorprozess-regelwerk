@@ -382,7 +382,6 @@ public class TemplateService : ITemplateService
             }
         }
     }
-}
 
     public async Task<TemplateExportDto?> ExportTemplateAsync(string id)
     {
