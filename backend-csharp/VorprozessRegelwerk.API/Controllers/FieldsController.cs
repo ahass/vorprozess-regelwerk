@@ -18,33 +18,12 @@ public class FieldsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<object>>> GetAllFields()
+    public async Task<ActionResult<IEnumerable<FieldResponseDto>>> GetAllFields()
     {
         try
         {
-            // Simplified response for testing
-            var mockFields = new[]
-            {
-                new {
-                    id = "test-field-1",
-                    name = new { de = "Test Feld", fr = "Champ test", it = "Campo test" },
-                    type = "text",
-                    visibility = "editable",
-                    requirement = "optional",
-                    validation = new { },
-                    selectType = (string?)null,
-                    options = new object[0],
-                    documentMode = (string?)null,
-                    documentConstraints = new { },
-                    roleConfig = new { },
-                    customerSpecific = false,
-                    visibleForCustomers = new string[0],
-                    dependencies = new object[0],
-                    createdAt = DateTime.UtcNow,
-                    updatedAt = DateTime.UtcNow
-                }
-            };
-            return Ok(mockFields);
+            var fields = await _fieldService.GetAllFieldsAsync();
+            return Ok(fields);
         }
         catch (Exception ex)
         {
