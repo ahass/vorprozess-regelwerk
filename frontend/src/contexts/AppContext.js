@@ -320,7 +320,7 @@ export const AppProvider = ({ children }) => {
         dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
         throw error;
       }
-    }
+    },
 
     
     // Template rendering
