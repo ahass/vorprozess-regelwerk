@@ -317,6 +317,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ ChangeLog page working correctly: Successfully loads with 'Änderungsprotokoll' heading, displays 13 changelog entries with proper formatting, shows creation/update/deletion actions with appropriate icons and badges, filter controls for type and entry count working, statistics showing activity breakdown (Erstellt/Aktualisiert/Gelöscht), proper German localization, change details display correctly with timestamps and user information."
+      - working: true
+        agent: "testing"
+        comment: "✅ Focused runtime error test completed successfully: ChangeLog page renders correctly with proper 'Änderungsprotokoll' heading, handles both empty state ('Keine Änderungen gefunden') and populated state gracefully. Entity IDs display correctly as truncated format (564d08db...) when present, timestamp formatting works without crashes (25.9.2025, 08:30:02), action badges render properly (Erstellt/Schablone), statistics cards show correct counts (1 Erstellt, 0 Aktualisiert, 0 Gelöscht), filter controls present. No runtime errors detected, only non-critical WebSocket connection warnings. Previous runtime error appears to be resolved."
 metadata:
   created_by: "main_agent"
   version: "1.0"
