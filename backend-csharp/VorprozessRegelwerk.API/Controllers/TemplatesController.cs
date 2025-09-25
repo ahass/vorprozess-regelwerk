@@ -162,3 +162,33 @@ public class TemplatesController : ControllerBase
             return StatusCode(500, new { message = "Internal server error" });
         }
     }
+
+
+    [HttpGet("export")] 
+    public async Task<ActionResult<IEnumerable<TemplateExportDto>>> ExportTemplates([FromQuery] string ids)
+    {
+        try
+        {
+            var idList = string.IsNullOrWhiteSpace(ids)
+                ? new List<string>()
+                : ids.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+            if (!idList.Any())
+            {
+                return BadRequest(new { message = "No template ids provided" });
+            }
+
+            var results = new List<TemplateExportDto>();
+            foreach (var id in idList)
+            {
+                var export = await _templateService.ExportTemplateAsync(id);
+                if (export != null) results.Add(export);
+            }
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error exporting templates {Ids}", ids);
+            return StatusCode(500, new { message = "Internal server error" });
+        }
+    }
