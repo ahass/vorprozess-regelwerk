@@ -301,6 +301,28 @@ export const AppProvider = ({ children }) => {
         dispatch({ type: actionTypes.SET_LOADING, payload: false });
       }
     },
+    },
+
+    // Export actions
+    exportTemplate: async (id) => {
+      try {
+        const data = await api.exportTemplate(id);
+        return data;
+      } catch (error) {
+        dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
+        throw error;
+      }
+    },
+    exportTemplatesBulk: async (ids) => {
+      try {
+        const data = await api.exportTemplatesBulk(ids);
+        return data;
+      } catch (error) {
+        dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
+        throw error;
+      }
+    }
+
     
     // Template rendering
     renderTemplates: async (renderRequest) => {
