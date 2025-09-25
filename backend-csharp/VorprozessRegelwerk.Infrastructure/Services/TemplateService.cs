@@ -413,18 +413,48 @@ public class TemplateService : ITemplateService
             .ToDictionaryAsync(g => g.Key, g => g.ToDictionary(x => x.LanguageCode, x => x.TextValue));
 
         var fieldExports = new List<FieldExportDto>();
+        // Build lookup for dependency field names
+        var depFieldIds = fields.SelectMany(f => f.DependenciesList.Select(d => d.FieldId)).Distinct().ToList();
+        var depNameLookup = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "field_name" && depFieldIds.Contains(t.EntityId))
+            .GroupBy(t => t.EntityId)
+            .ToDictionaryAsync(g => g.Key, g => g.ToDictionary(x => x.LanguageCode, x => x.TextValue));
+
         foreach (var f in fields)
         {
             var name = fieldNameLookup.ContainsKey(f.Id)
                 ? MultiLanguageTextDto.FromDictionary(fieldNameLookup[f.Id])
                 : new MultiLanguageTextDto();
 
+            var options = f.OptionsList.Select(opt => new SelectOptionExportDto
+            {
+                Id = opt.Id,
+                Label = MultiLanguageTextDto.FromDictionary(new Dictionary<string, string>
+                {
+                    ["de"] = opt.Label?.TextValue ?? string.Empty, // Bei Bedarf erweitern, falls Label mehrsprachig als ML-Texte gespeichert werden
+                    ["fr"] = opt.Label?.TextValue ?? string.Empty,
+                    ["it"] = opt.Label?.TextValue ?? string.Empty
+                }),
+                Value = opt.Value
+            }).ToList();
+
+            var deps = f.DependenciesList.Select(d => new FieldDependencyExportDto
+            {
+                FieldId = d.FieldId,
+                FieldName = depNameLookup.ContainsKey(d.FieldId)
+                    ? MultiLanguageTextDto.FromDictionary(depNameLookup[d.FieldId])
+                    : new MultiLanguageTextDto(),
+                Operator = d.Operator,
+                ConditionValue = d.ConditionValue
+            }).ToList();
+
             fieldExports.Add(new FieldExportDto
             {
                 Id = f.Id,
                 Type = f.Type.ToString().ToLower(),
                 Name = name,
-                Dependencies = f.DependenciesList
+                Options = options,
+                Dependencies = deps
             });
         }
 
