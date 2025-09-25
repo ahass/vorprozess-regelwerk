@@ -143,3 +143,22 @@ public class TemplatesController : ControllerBase
         }
     }
 }
+
+    [HttpGet("{id}/export")] 
+    public async Task<ActionResult<TemplateExportDto>> ExportTemplate(string id)
+    {
+        try
+        {
+            var export = await _templateService.ExportTemplateAsync(id);
+            if (export == null)
+            {
+                return NotFound(new { message = "Template not found" });
+            }
+            return Ok(export);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error exporting template {TemplateId}", id);
+            return StatusCode(500, new { message = "Internal server error" });
+        }
+    }
