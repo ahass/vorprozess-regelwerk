@@ -16,6 +16,7 @@ const TemplateBuilder = () => {
     updateTemplate,
     createField,
     setCurrentTemplate,
+    exportTemplate,
     loading,
     error 
   } = useApp();
