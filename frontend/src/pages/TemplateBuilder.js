@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../contexts/AppContext';
 import MultiLanguageInput from '../components/MultiLanguageInput';
 
+import { useEffectOnce } from 'react-use';
+
 const TemplateBuilder = () => {
   const { 
     templates, 
