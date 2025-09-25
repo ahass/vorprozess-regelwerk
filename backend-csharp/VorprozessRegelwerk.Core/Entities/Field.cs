@@ -64,8 +64,49 @@ public class Field
     [NotMapped]
     public List<SelectOption> OptionsList
     {
-        get => JsonConvert.DeserializeObject<List<SelectOption>>(Options) ?? new List<SelectOption>();
-        set => Options = JsonConvert.SerializeObject(value);
+        get
+        {
+            try
+            {
+                // Try as array of SelectOption
+                var list = JsonConvert.DeserializeObject<List<SelectOption>>(Options);
+                if (list != null) return list;
+            }
+            catch
+            {
+                // ignore
+            }
+
+            try
+            {
+                // Handle cases when Options accidentally contains System.Text.Json JsonElement or a single object
+                var node = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonNode?>(Options);
+                if (node is System.Text.Json.Nodes.JsonArray arr)
+                {
+                    var list = new List<SelectOption>();
+                    foreach (var el in arr)
+                    {
+                        if (el == null) continue;
+                        var so = System.Text.Json.JsonSerializer.Deserialize<SelectOption>(el.ToJsonString());
+                        if (so != null) list.Add(so);
+                    }
+                    return list;
+                }
+                else if (node is System.Text.Json.Nodes.JsonObject obj)
+                {
+                    // If it's a single object, wrap it
+                    var so = System.Text.Json.JsonSerializer.Deserialize<SelectOption>(obj.ToJsonString());
+                    return so != null ? new List<SelectOption> { so } : new List<SelectOption>();
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return new List<SelectOption>();
+        }
+        set => Options = JsonConvert.SerializeObject(value ?? new List<SelectOption>());
     }
 
     [NotMapped]
