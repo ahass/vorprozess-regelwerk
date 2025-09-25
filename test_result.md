@@ -359,3 +359,46 @@ agent_communication:
     message: >-
       ✅ Comprehensive C# backend UI testing completed successfully! All 5 main page scenarios tested against current C# backend: 1) /builder - Page loads correctly, shows templates list and available fields section, successfully created new template 'Test Template UI' and new field 'Test Text Field', field addition to template works with field count updates visible in template cards. 2) /overview - Loads templates correctly with search functionality working, template cards show proper field counts and statistics (2 templates, 1 field total). 3) /enhanced-builder - All 3 tabs render properly (🛠️ Builder, 🧪 Simulator, 📎 Abhängigkeiten), template selection functional, sections render without errors. 4) /simulator - Role selector defaults to 'Anmelder', template selection works via checkboxes, simulation starts and renders results section properly. 5) /changelog - Displays 16 changelog entries with proper formatting, shows create/update entries from test scenarios, statistics show activity breakdown. All API calls use correct REACT_APP_BACKEND_URL with /api prefix. No console errors or network failures detected. Screenshots captured for all scenarios. Frontend-C# backend integration working perfectly with full CRUD functionality.
 ---
+
+---
+user_problem_statement: >-
+  Run a persistence validation against C# backend:
+  1) Create template A and field X via API
+  2) Associate field X to template A via PUT
+  3) GET /api/templates and /api/templates/{id} to ensure the association is present
+  4) Create template B and field Y, then repeat association
+  5) Restart csharp-backend service (supervisor) then GET templates again to confirm persistence in SQLite
+  Report any inconsistencies.
+backend:
+  - task: "C# Backend SQLite Persistence Validation"
+    implemented: true
+    working: true
+    file: "/app/backend-csharp/VorprozessRegelwerk.API/vorprozess_regelwerk.db"
+    stuck_count: 0
+    priority: "highest"
+    needs_retesting: false
+    status_history:
+      - working: NA
+        agent: "testing"
+        comment: "Executing comprehensive persistence validation test as requested by user."
+      - working: true
+        agent: "testing"
+        comment: "✅ C# Backend SQLite persistence validation completed successfully! Executed complete test sequence: 1) Created Template A (ID: 271d7881-1a9b-4b3e-bd54-5870a8fc8e3d) and Field X (ID: f59618c7-24c2-4f75-982b-40b3aca9aa38) via POST APIs. 2) Successfully associated Field X to Template A via PUT /api/templates/{id} with fields array. 3) Verified association present in both GET /api/templates (list) and GET /api/templates/{id} (individual retrieval). 4) Created Template B (ID: e2929210-d444-45d6-8117-ca0b59ed20dc) and Field Y (ID: 6d2564c6-83b8-4182-81f8-d9e50cbb5d87), then successfully associated them. 5) Restarted csharp-backend service via supervisor, waited for backend readiness, then verified ALL data persisted correctly in SQLite database. Both templates and their field associations remained intact after service restart. All 13 test steps passed (100% success rate). No inconsistencies found. SQLite persistence working perfectly."
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "C# Backend SQLite Persistence Validation"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "highest"
+
+agent_communication:
+  - agent: "testing"
+    message: >-
+      ✅ C# Backend SQLite persistence validation completed successfully! Comprehensive test executed as requested: Created templates A & B with fields X & Y, associated them via PUT APIs, verified associations via GET APIs, restarted csharp-backend service via supervisor, and confirmed all data persisted correctly in SQLite database. All 13 test steps passed with 100% success rate. No inconsistencies detected. The C# ASP.NET Core backend with SQLite database demonstrates perfect data persistence across service restarts. Template-field associations, multilingual content, and all metadata remain intact after restart. Database file confirmed at /app/backend-csharp/VorprozessRegelwerk.API/vorprozess_regelwerk.db (73KB size indicates active data storage).
+---
