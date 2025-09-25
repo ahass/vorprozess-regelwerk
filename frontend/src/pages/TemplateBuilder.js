@@ -143,6 +143,29 @@ const TemplateBuilder = () => {
             + {language === 'de' ? 'Neues Feld' : language === 'fr' ? 'Nouveau champ' : 'Nuovo campo'}
           </button>
         </div>
+          <button
+            onClick={async () => {
+              try {
+                if (!currentTemplate?.id) return;
+                const exportData = await window.appApi.exportTemplate(currentTemplate.id);
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `template-${currentTemplate.id}.json`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+              } catch (e) {
+                console.error('Export failed', e);
+              }
+            }}
+            className="btn-outline"
+          >
+            ⬇️ {language === 'de' ? 'Export JSON' : language === 'fr' ? 'Exporter JSON' : 'Esporta JSON'}
+          </button>
+
       </div>
 
       {error && (
