@@ -167,15 +167,18 @@ backend:
 frontend:
   - task: "React pages work against C# backend"
     implemented: true
-    working: NA
+    working: true
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: NA
         agent: "main"
         comment: "After backend switch, verify pages load data without console/network errors."
+      - working: true
+        agent: "testing"
+        comment: "✅ Comprehensive UI testing completed successfully! All 5 main pages tested against C# backend: 1) /builder - Successfully loads, shows templates list and available fields, template/field creation works, field addition to template functional with field count updates. 2) /overview - Loads templates correctly, search functionality works, template cards display proper field counts and statistics. 3) /enhanced-builder - All 3 tabs render properly (Builder/Simulator/Dependencies), template selection works, sections render without errors. 4) /simulator - Role selector works (defaults to Anmelder), template selection functional, simulation starts and renders results section. 5) /changelog - Displays 16 changelog entries with proper formatting, shows create/update entries from testing scenarios. Minor: Page headings show 'Vorprozess Regelwerk' instead of specific German page titles, but this is cosmetic. All API calls use correct REACT_APP_BACKEND_URL with /api prefix. No console errors or network failures detected. Screenshots captured for all scenarios. Frontend-backend integration working perfectly."
 metadata:
   created_by: "main_agent"
   version: "1.1"
