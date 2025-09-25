@@ -112,8 +112,29 @@ public class Field
     [NotMapped]
     public DocumentConstraints DocumentConstraintsObject
     {
-        get => JsonConvert.DeserializeObject<DocumentConstraints>(DocumentConstraints) ?? new DocumentConstraints();
-        set => DocumentConstraints = JsonConvert.SerializeObject(value);
+        get
+        {
+            try
+            {
+                var obj = JsonConvert.DeserializeObject<DocumentConstraints>(DocumentConstraints);
+                if (obj != null) return obj;
+            }
+            catch { }
+
+            try
+            {
+                var node = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonNode?>(DocumentConstraints);
+                if (node is System.Text.Json.Nodes.JsonObject objNode)
+                {
+                    var obj = System.Text.Json.JsonSerializer.Deserialize<DocumentConstraints>(objNode.ToJsonString());
+                    if (obj != null) return obj;
+                }
+            }
+            catch { }
+
+            return new DocumentConstraints();
+        }
+        set => DocumentConstraints = JsonConvert.SerializeObject(value ?? new DocumentConstraints());
     }
 
     [NotMapped]
