@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VorprozessRegelwerk.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a67c5578c77de7e875d941d3e0ffb5592b15faa0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16fd87c67869799fa8f6cd8c317b1623c7a209f6")]
 [assembly: System.Reflection.AssemblyProductAttribute("VorprozessRegelwerk.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VorprozessRegelwerk.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
