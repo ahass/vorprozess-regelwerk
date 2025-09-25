@@ -90,19 +90,43 @@ public class TemplateService : ITemplateService
         // Handle fields update
         if (templateDto.Fields != null)
         {
-            // Clear existing relationships
+            // Normalize incoming field ids (dedupe, trim, remove empties)
+            var incomingFieldIds = templateDto.Fields
+                .Where(fid => !string.IsNullOrWhiteSpace(fid))
+                .Select(fid => fid.Trim())
+                .Distinct()
+                .ToList();
+
+            // Validate that field ids exist
+            var existingFieldIds = await _context.Fields
+                .Where(f => incomingFieldIds.Contains(f.Id))
+                .Select(f => f.Id)
+                .ToListAsync();
+
+            var missingFieldIds = incomingFieldIds.Except(existingFieldIds).ToList();
+            if (missingFieldIds.Any())
+            {
+                _logger.LogWarning("UpdateTemplateAsync: ignoring {MissingCount} missing field ids: {Missing}", missingFieldIds.Count, string.Join(",", missingFieldIds));
+            }
+
+            // Clear existing relationships and persist to avoid FK issues in SQLite
             _context.TemplateFields.RemoveRange(template.TemplateFields);
+            await _context.SaveChangesAsync();
             
-            // Add new relationships
-            var newTemplateFields = templateDto.Fields.Select((fieldId, index) => new TemplateField
+            // Add new relationships only for existing field ids
+            var newTemplateFields = existingFieldIds.Select((fieldId, index) => new TemplateField
             {
                 TemplateId = id,
                 FieldId = fieldId,
                 Order = index
             }).ToList();
 
-            await _context.TemplateFields.AddRangeAsync(newTemplateFields);
-            changes["fields"] = templateDto.Fields;
+            if (newTemplateFields.Any())
+            {
+                await _context.TemplateFields.AddRangeAsync(newTemplateFields);
+            }
+
+            changes["fields"] = existingFieldIds;
         }
 
         // Update multilanguage texts
