@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
 using VorprozessRegelwerk.Core.DTOs;
 using VorprozessRegelwerk.Core.Enums;
 using VorprozessRegelwerk.Core.Interfaces;
@@ -10,16 +13,16 @@ namespace VorprozessRegelwerk.API.Controllers;
 public class TemplatesController : ControllerBase
 {
     private readonly ITemplateService _templateService;
-    private readonly ILogger<TemplatesController> _logger;
+    private readonly ILogger&lt;TemplatesController&gt; _logger;
 
-    public TemplatesController(ITemplateService templateService, ILogger<TemplatesController> logger)
+    public TemplatesController(ITemplateService templateService, ILogger&lt;TemplatesController&gt; logger)
     {
         _templateService = templateService;
         _logger = logger;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TemplateResponseDto>>> GetAllTemplates()
+    public async Task&lt;ActionResult&lt;IEnumerable&lt;TemplateResponseDto&gt;&gt;&gt; GetAllTemplates()
     {
         try
         {
@@ -34,7 +37,7 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<TemplateResponseDto>> GetTemplate(string id)
+    public async Task&lt;ActionResult&lt;TemplateResponseDto&gt;&gt; GetTemplate(string id)
     {
         try
         {
@@ -53,7 +56,7 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TemplateResponseDto>> CreateTemplate([FromBody] TemplateCreateDto templateDto, [FromQuery] string userId = "system")
+    public async Task&lt;ActionResult&lt;TemplateResponseDto&gt;&gt; CreateTemplate([FromBody] TemplateCreateDto templateDto, [FromQuery] string userId = "system")
     {
         try
         {
@@ -68,7 +71,7 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<TemplateResponseDto>> UpdateTemplate(string id, [FromBody] TemplateUpdateDto templateDto, [FromQuery] string userId = "system")
+    public async Task&lt;ActionResult&lt;TemplateResponseDto&gt;&gt; UpdateTemplate(string id, [FromBody] TemplateUpdateDto templateDto, [FromQuery] string userId = "system")
     {
         try
         {
@@ -106,7 +109,7 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpPost("render")]
-    public async Task<ActionResult<TemplateRenderResponseDto>> RenderTemplates([FromBody] TemplateRenderRequestDto renderRequest)
+    public async Task&lt;ActionResult&lt;TemplateRenderResponseDto&gt;&gt; RenderTemplates([FromBody] TemplateRenderRequestDto renderRequest)
     {
         try
         {
@@ -121,10 +124,10 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpPost("simulate")]
-    public async Task<ActionResult<object>> SimulateTemplate(
+    public async Task&lt;ActionResult&lt;object&gt;&gt; SimulateTemplate(
         [FromQuery] string templateId,
         [FromQuery] UserRole role,
-        [FromBody] Dictionary<string, object> fieldValues,
+        [FromBody] Dictionary&lt;string, object&gt; fieldValues,
         [FromQuery] string? customerId = null)
     {
         try
@@ -142,10 +145,9 @@ public class TemplatesController : ControllerBase
             return StatusCode(500, new { message = "Internal server error" });
         }
     }
-}
 
-    [HttpGet("{id}/export")] 
-    public async Task<ActionResult<TemplateExportDto>> ExportTemplate(string id)
+    [HttpGet("{id}/export")]
+    public async Task&lt;ActionResult&lt;TemplateExportDto&gt;&gt; ExportTemplate(string id)
     {
         try
         {
@@ -163,14 +165,13 @@ public class TemplatesController : ControllerBase
         }
     }
 
-
-    [HttpGet("export")] 
-    public async Task<ActionResult<IEnumerable<TemplateExportDto>>> ExportTemplates([FromQuery] string ids)
+    [HttpGet("export")]
+    public async Task&lt;ActionResult&lt;IEnumerable&lt;TemplateExportDto&gt;&gt;&gt; ExportTemplates([FromQuery] string ids)
     {
         try
         {
             var idList = string.IsNullOrWhiteSpace(ids)
-                ? new List<string>()
+                ? new List&lt;string&gt;()
                 : ids.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
 
             if (!idList.Any())
@@ -178,7 +179,7 @@ public class TemplatesController : ControllerBase
                 return BadRequest(new { message = "No template ids provided" });
             }
 
-            var results = new List<TemplateExportDto>();
+            var results = new List&lt;TemplateExportDto&gt;();
             foreach (var id in idList)
             {
                 var export = await _templateService.ExportTemplateAsync(id);
@@ -192,3 +193,4 @@ public class TemplatesController : ControllerBase
             return StatusCode(500, new { message = "Internal server error" });
         }
     }
+}
