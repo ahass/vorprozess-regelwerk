@@ -301,7 +301,6 @@ export const AppProvider = ({ children }) => {
         dispatch({ type: actionTypes.SET_LOADING, payload: false });
       }
     },
-    },
 
     // Export actions
     exportTemplate: async (id) => {
