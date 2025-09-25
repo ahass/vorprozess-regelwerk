@@ -383,3 +383,57 @@ public class TemplateService : ITemplateService
         }
     }
 }
+
+    public async Task<TemplateExportDto?> ExportTemplateAsync(string id)
+    {
+        var template = await _context.Templates
+            .Include(t => t.TemplateFields)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (template == null) return null;
+
+        // Load names/descriptions
+        var nameDict = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "template_name" && t.EntityId == template.Id)
+            .ToDictionaryAsync(t => t.LanguageCode, t => t.TextValue);
+
+        var descDict = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "template_description" && t.EntityId == template.Id)
+            .ToDictionaryAsync(t => t.LanguageCode, t => t.TextValue);
+
+        // Load fields
+        var fieldIds = template.TemplateFields.Select(tf => tf.FieldId).ToList();
+        var fields = await _context.Fields
+            .Where(f => fieldIds.Contains(f.Id))
+            .ToListAsync();
+
+        // Load field names
+        var fieldNameLookup = await _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "field_name" && fieldIds.Contains(t.EntityId))
+            .GroupBy(t => t.EntityId)
+            .ToDictionaryAsync(g => g.Key, g => g.ToDictionary(x => x.LanguageCode, x => x.TextValue));
+
+        var fieldExports = new List<FieldExportDto>();
+        foreach (var f in fields)
+        {
+            var name = fieldNameLookup.ContainsKey(f.Id)
+                ? MultiLanguageTextDto.FromDictionary(fieldNameLookup[f.Id])
+                : new MultiLanguageTextDto();
+
+            fieldExports.Add(new FieldExportDto
+            {
+                Id = f.Id,
+                Type = f.Type.ToString().ToLower(),
+                Name = name,
+                Dependencies = f.DependenciesList
+            });
+        }
+
+        return new TemplateExportDto
+        {
+            Id = template.Id,
+            Name = MultiLanguageTextDto.FromDictionary(nameDict),
+            Description = descDict.Any() ? MultiLanguageTextDto.FromDictionary(descDict) : null,
+            Fields = fieldExports
+        };
+    }
