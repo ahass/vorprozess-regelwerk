@@ -280,9 +280,10 @@ export const AppProvider = ({ children }) => {
       try {
         dispatch({ type: actionTypes.SET_LOADING, payload: true });
         const changelog = await api.getChangelog(limit, entityType);
-        dispatch({ type: actionTypes.SET_CHANGELOG, payload: changelog });
+        dispatch({ type: actionTypes.SET_CHANGELOG, payload: Array.isArray(changelog) ? changelog : [] });
       } catch (error) {
         dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
+        dispatch({ type: actionTypes.SET_CHANGELOG, payload: [] });
       } finally {
         dispatch({ type: actionTypes.SET_LOADING, payload: false });
       }
