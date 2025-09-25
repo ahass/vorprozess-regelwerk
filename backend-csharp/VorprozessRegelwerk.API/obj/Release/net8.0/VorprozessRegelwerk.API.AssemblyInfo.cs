@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VorprozessRegelwerk.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f57a0f69f8e52ff4db5715996bbae68ca182510b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f65efa1e510b72e0b8437f4b163960dd8c103c7e")]
 [assembly: System.Reflection.AssemblyProductAttribute("VorprozessRegelwerk.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VorprozessRegelwerk.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
