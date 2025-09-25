@@ -249,10 +249,15 @@ public class FieldService : IFieldService
 
     private FieldResponseDto MapToResponseDto(Field field)
     {
+        // Load multilanguage names from MultiLanguageTexts
+        var nameDict = _context.MultiLanguageTexts
+            .Where(t => t.EntityType == "field_name" && t.EntityId == field.Id)
+            .ToDictionary(t => t.LanguageCode, t => t.TextValue);
+
         return new FieldResponseDto
         {
             Id = field.Id,
-            Name = GetMultiLanguageTextDto(field.Names),
+            Name = MultiLanguageTextDto.FromDictionary(nameDict),
             Type = field.Type,
             Visibility = field.Visibility,
             Requirement = field.Requirement,
