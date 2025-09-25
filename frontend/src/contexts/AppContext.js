@@ -150,6 +150,19 @@ const api = {
     const response = await axios.get(`${API}/changelog?${params}`);
     return response.data;
   }
+  ,
+  // Template export
+  exportTemplate: async (id) => {
+    const response = await axios.get(`${API}/templates/${id}/export`);
+    return response.data;
+  },
+  exportTemplatesBulk: async (ids) => {
+    const params = new URLSearchParams();
+    params.append('ids', ids.join(','));
+    const response = await axios.get(`${API}/templates/export?${params}`);
+    return response.data;
+  }
+
 };
 
 // Provider component
