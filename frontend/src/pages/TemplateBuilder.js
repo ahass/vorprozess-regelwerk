@@ -150,7 +150,7 @@ const TemplateBuilder = () => {
             onClick={async () => {
               try {
                 if (!currentTemplate?.id) return;
-                const exportData = await window.appApi.exportTemplate(currentTemplate.id);
+                const exportData = await exportTemplate(currentTemplate.id);
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
