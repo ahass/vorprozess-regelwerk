@@ -402,3 +402,42 @@ agent_communication:
     message: >-
       ✅ C# Backend SQLite persistence validation completed successfully! Comprehensive test executed as requested: Created templates A & B with fields X & Y, associated them via PUT APIs, verified associations via GET APIs, restarted csharp-backend service via supervisor, and confirmed all data persisted correctly in SQLite database. All 13 test steps passed with 100% success rate. No inconsistencies detected. The C# ASP.NET Core backend with SQLite database demonstrates perfect data persistence across service restarts. Template-field associations, multilingual content, and all metadata remain intact after restart. Database file confirmed at /app/backend-csharp/VorprozessRegelwerk.API/vorprozess_regelwerk.db (73KB size indicates active data storage).
 ---
+---
+user_problem_statement: >-
+  Run UI test for Export in Template Builder:
+  1) Navigate to /builder, wait data
+  2) If no templates, create one (DE name only minimal). Select it
+  3) Click 'Export JSON' button
+  4) Verify a download is triggered with filename starting 'template-' and JSON content has id, name.de
+  5) Report any errors
+frontend:
+  - task: "Export JSON functionality in Template Builder"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/TemplateBuilder.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL: Export JSON functionality fails due to missing backend endpoint. Frontend implementation is correct: 1) ✅ Navigation to /builder works - page loads with 'Schablonen-Builder' title. 2) ✅ Template selection works - 'Test Schablone' template found and selectable with blue border indication. 3) ✅ Export JSON button found and clickable in top right corner. 4) ❌ CRITICAL FAILURE: Backend API endpoint /api/templates/{id}/export returns 404 Not Found. The frontend correctly calls the export API but the Python backend (currently running on port 8001) does not implement the export endpoint. The C# backend has export functionality implemented but cannot start due to port conflict with Python backend. Error: 'Failed to load resource: the server responded with a status of 404' when clicking Export JSON button. No download is triggered due to API failure."
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Export JSON functionality in Template Builder"
+  stuck_tasks:
+    - "Export JSON functionality in Template Builder"
+  test_all: false
+  test_priority: "high"
+
+agent_communication:
+  - agent: "testing"
+    message: >-
+      ❌ CRITICAL ISSUE FOUND: Export JSON functionality in Template Builder fails due to missing backend API endpoint. Frontend UI works perfectly (navigation, template selection, button click), but the Python backend lacks the /api/templates/{id}/export endpoint that returns 404. The C# backend has this functionality implemented but cannot run due to port conflict. This is a high-priority backend implementation issue that blocks the export feature completely. Main agent needs to either: 1) Implement the export endpoint in the Python backend, or 2) Switch to the C# backend by stopping the Python backend first.
+---
