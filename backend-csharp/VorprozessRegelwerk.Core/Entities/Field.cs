@@ -133,8 +133,40 @@ public class Field
     [NotMapped]
     public List<FieldDependency> DependenciesList
     {
-        get => JsonConvert.DeserializeObject<List<FieldDependency>>(Dependencies) ?? new List<FieldDependency>();
-        set => Dependencies = JsonConvert.SerializeObject(value);
+        get
+        {
+            try
+            {
+                var list = JsonConvert.DeserializeObject<List<FieldDependency>>(Dependencies);
+                if (list != null) return list;
+            }
+            catch { }
+
+            try
+            {
+                var node = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.Nodes.JsonNode?>(Dependencies);
+                if (node is System.Text.Json.Nodes.JsonArray arr)
+                {
+                    var list = new List<FieldDependency>();
+                    foreach (var el in arr)
+                    {
+                        if (el == null) continue;
+                        var dep = System.Text.Json.JsonSerializer.Deserialize<FieldDependency>(el.ToJsonString());
+                        if (dep != null) list.Add(dep);
+                    }
+                    return list;
+                }
+                else if (node is System.Text.Json.Nodes.JsonObject obj)
+                {
+                    var dep = System.Text.Json.JsonSerializer.Deserialize<FieldDependency>(obj.ToJsonString());
+                    return dep != null ? new List<FieldDependency> { dep } : new List<FieldDependency>();
+                }
+            }
+            catch { }
+
+            return new List<FieldDependency>();
+        }
+        set => Dependencies = JsonConvert.SerializeObject(value ?? new List<FieldDependency>());
     }
 }
 
