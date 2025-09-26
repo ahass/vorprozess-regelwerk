@@ -468,28 +468,29 @@ const TemplateBuilder = () => {
                       </select>
                     </div>
 
-                    {/* Role-based settings */}
+                    {/* Role-based settings as a grid: rows = Rollen, cols = Eigenschaften */}
                     <div className="md:col-span-2">
                       <label className="form-label">
                         {language === 'de' ? 'Rollenbasierte Einstellungen' : language === 'fr' ? 'Paramètres par rôle' : 'Impostazioni per ruolo'}
                       </label>
-                      <div className="grid grid-cols-3 gap-4">
-                        {['admin','klient','anmelder'].map(role => (
-                          <div key={role} className="border rounded p-3">
-                            <div className="font-medium capitalize mb-2">{role}</div>
-                            <div className="space-y-2">
-                              <label className="inline-flex items-center space-x-2">
-                                <input type="checkbox" checked={newField.role_config[role].visible} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], visible: e.target.checked}}})} />
-                                <span>{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</span>
-                              </label>
-                              <label className="inline-flex items-center space-x-2">
-                                <input type="checkbox" checked={newField.role_config[role].editable} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], editable: e.target.checked}}})} />
-                                <span>{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</span>
-                              </label>
-                              <label className="inline-flex items-center space-x-2">
-                                <input type="checkbox" checked={newField.role_config[role].required} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], required: e.target.checked}}})} />
-                                <span>{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</span>
-                              </label>
+                      <div className="overflow-auto border rounded">
+                        <div className="grid grid-cols-4 items-center text-sm font-medium bg-gray-50 border-b">
+                          <div className="p-2"></div>
+                          <div className="p-2">{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</div>
+                          <div className="p-2">{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</div>
+                          <div className="p-2">{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</div>
+                        </div>
+                        {['klient','anmelder','admin'].map(role => (
+                          <div key={role} className="grid grid-cols-4 items-center border-b last:border-b-0">
+                            <div className="p-2 capitalize">{role}</div>
+                            <div className="p-2">
+                              <input type="checkbox" checked={!!newField.role_config[role]?.visible} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], visible: e.target.checked}}})} />
+                            </div>
+                            <div className="p-2">
+                              <input type="checkbox" checked={!!newField.role_config[role]?.editable} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], editable: e.target.checked}}})} />
+                            </div>
+                            <div className="p-2">
+                              <input type="checkbox" checked={!!newField.role_config[role]?.required} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], required: e.target.checked}}})} />
                             </div>
                           </div>
                         ))}
