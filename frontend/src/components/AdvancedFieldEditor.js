@@ -183,23 +183,24 @@ const AdvancedFieldEditor = ({ field, onSave, onCancel, availableFields = [] }) 
                   <label className="form-label">
                     {language === 'de' ? 'Rollenbasierte Einstellungen' : language === 'fr' ? 'Paramètres par rôle' : 'Impostazioni per ruolo'}
                   </label>
-                  <div className="grid grid-cols-3 gap-4">
-                    {roles.map(r => (
-                      <div key={r.code} className="border rounded p-3">
-                        <div className="font-medium mb-2">{r.name}</div>
-                        <div className="space-y-2">
-                          <label className="inline-flex items-center space-x-2">
-                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.visible || false} onChange={(e)=> updateRoleConfig(r.code, 'visible', e.target.checked)} />
-                            <span>{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</span>
-                          </label>
-                          <label className="inline-flex items-center space-x-2">
-                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.editable || false} onChange={(e)=> updateRoleConfig(r.code, 'editable', e.target.checked)} />
-                            <span>{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</span>
-                          </label>
-                          <label className="inline-flex items-center space-x-2">
-                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.required || false} onChange={(e)=> updateRoleConfig(r.code, 'required', e.target.checked)} />
-                            <span>{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</span>
-                          </label>
+                  <div className="overflow-auto border rounded">
+                    <div className="grid grid-cols-4 items-center text-sm font-medium bg-gray-50 border-b">
+                      <div className="p-2"></div>
+                      <div className="p-2">{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</div>
+                      <div className="p-2">{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</div>
+                      <div className="p-2">{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</div>
+                    </div>
+                    {['klient','anmelder','admin'].map(role => (
+                      <div key={role} className="grid grid-cols-4 items-center border-b last:border-b-0">
+                        <div className="p-2 capitalize">{role}</div>
+                        <div className="p-2">
+                          <input type="checkbox" checked={!!fieldData.role_config?.[role]?.visible} onChange={(e)=> updateRoleConfig(role, 'visible', e.target.checked)} />
+                        </div>
+                        <div className="p-2">
+                          <input type="checkbox" checked={!!fieldData.role_config?.[role]?.editable} onChange={(e)=> updateRoleConfig(role, 'editable', e.target.checked)} />
+                        </div>
+                        <div className="p-2">
+                          <input type="checkbox" checked={!!fieldData.role_config?.[role]?.required} onChange={(e)=> updateRoleConfig(role, 'required', e.target.checked)} />
                         </div>
                       </div>
                     ))}
