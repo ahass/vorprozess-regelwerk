@@ -196,6 +196,49 @@ const TemplateBuilder = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-medium">
+                        {editingTemplateName ? (
+                          <MultiLanguageInput
+                            label={language === 'de' ? 'Schablonenname' : language === 'fr' ? 'Nom du modèle' : 'Nome del modello'}
+                            value={editTemplateNameValue}
+                            onChange={setEditTemplateNameValue}
+                          />
+                        ) : (
+                          getLocalizedText(currentTemplate.name)
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-600">{getLocalizedText(currentTemplate.description)}</div>
+                    </div>
+                    <div className="ml-4">
+                      {editingTemplateName ? (
+                        <button
+                          className="btn-primary btn-sm"
+                          onClick={async ()=>{
+                            await updateTemplate(currentTemplate.id, { name: editTemplateNameValue });
+                            setCurrentTemplate({ ...currentTemplate, name: editTemplateNameValue });
+                            setEditingTemplateName(false);
+                          }}
+                        >
+                          {language === 'de' ? 'Speichern' : language === 'fr' ? 'Enregistrer' : 'Salva'}
+                        </button>
+                      ) : (
+                        <button
+                          className="btn-outline btn-sm"
+                          onClick={()=>{
+                            setEditTemplateNameValue(currentTemplate.name || { de:'', fr:'', it:'' });
+                            setEditingTemplateName(true);
+                          }}
+                        >
+                          {language === 'de' ? 'Bearbeiten' : language === 'fr' ? 'Modifier' : 'Modifica'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
         {/* Template Selection */}
         <div className="card">
           <div className="card-header">
