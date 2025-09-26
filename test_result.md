@@ -6,24 +6,56 @@ user_problem_statement: >-
 frontend:
   - task: "New Field dialog with 9-role-checkbox matrix"
     implemented: true
-    working: NA
+    working: true
     file: "/app/frontend/src/pages/TemplateBuilder.js"
     priority: high
+    needs_retesting: false
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Implemented 9-role-checkbox matrix in field creation dialog"
+      - working: true
+        agent: "testing"
+        comment: "✅ New Field dialog working perfectly with 9-role-checkbox matrix. Successfully tested field creation with 'Test Auswahl' name, role matrix configuration (Klient: visible+editable+required, Anmelder: visible only, Admin: all unchecked), and field appears in available fields list. Role matrix displays correctly with 3 roles (Klient, Anmelder, Admin) × 3 properties (Sichtbar, Bearbeitbar, Pflichtfeld) = 9 checkboxes as expected."
   - task: "AdvancedFieldEditor shows same roles matrix"
     implemented: true
-    working: NA
+    working: true
     file: "/app/frontend/src/components/AdvancedFieldEditor.js"
     priority: high
+    needs_retesting: false
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "AdvancedFieldEditor component includes same role matrix structure"
+      - working: true
+        agent: "testing"
+        comment: "✅ AdvancedFieldEditor component verified to have same role matrix structure as main field dialog. Code review confirms identical 9-checkbox matrix implementation with same role configuration options (klient, anmelder, admin) and same properties (visible, editable, required). Component properly implements updateRoleConfig function for role-based field permissions."
   - task: "Template name inline edit in Builder"
     implemented: true
-    working: NA
+    working: true
     file: "/app/frontend/src/pages/TemplateBuilder.js"
     priority: high
+    needs_retesting: false
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Implemented inline template name editing functionality"
+      - working: true
+        agent: "testing"
+        comment: "✅ Template name inline edit working perfectly. Successfully tested: 1) 'Bearbeiten' button appears and is clickable, 2) Clicking opens inline edit mode with German name input field, 3) Changed name from 'Test Template Deutsch' to 'Geänderter Name', 4) 'Speichern' button saves changes successfully, 5) Template card updates immediately with new name 'Geänderter Name', 6) Changes persist and are reflected in the selected template display."
   - task: "Export JSON button in Builder"
     implemented: true
-    working: NA
+    working: true
     file: "/app/frontend/src/pages/TemplateBuilder.js"
     priority: medium
+    needs_retesting: false
+    status_history:
+      - working: NA
+        agent: "main"
+        comment: "Implemented Export JSON functionality in Builder"
+      - working: true
+        agent: "testing"
+        comment: "✅ Export JSON functionality working perfectly against C# backend. Successfully tested: 1) Export JSON button found and clickable in top right corner, 2) Download triggered with correct filename format 'template-fa2d27dd-4ee3-483f-adba-00cfc20c36a1.json', 3) Network request to /api/templates/{id}/export returns 200 status, 4) JSON content has correct structure with 'id' and 'name' fields, 5) Template name properly structured with 'name.de' containing 'Geänderter Name', 6) File downloads successfully as blob. Export endpoint working correctly with C# backend."
 metadata:
   created_by: main_agent
   version: 1.2
