@@ -178,6 +178,34 @@ const AdvancedFieldEditor = ({ field, onSave, onCancel, availableFields = [] }) 
                     <option value="select">Auswahl</option>
                     <option value="document">Dokument</option>
                   </select>
+                {/* Role-based settings */}
+                <div className="md:col-span-2">
+                  <label className="form-label">
+                    {language === 'de' ? 'Rollenbasierte Einstellungen' : language === 'fr' ? 'Paramètres par rôle' : 'Impostazioni per ruolo'}
+                  </label>
+                  <div className="grid grid-cols-3 gap-4">
+                    {roles.map(r => (
+                      <div key={r.code} className="border rounded p-3">
+                        <div className="font-medium mb-2">{r.name}</div>
+                        <div className="space-y-2">
+                          <label className="inline-flex items-center space-x-2">
+                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.visible || false} onChange={(e)=> updateRoleConfig(r.code, 'visible', e.target.checked)} />
+                            <span>{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</span>
+                          </label>
+                          <label className="inline-flex items-center space-x-2">
+                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.editable || false} onChange={(e)=> updateRoleConfig(r.code, 'editable', e.target.checked)} />
+                            <span>{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</span>
+                          </label>
+                          <label className="inline-flex items-center space-x-2">
+                            <input type="checkbox" checked={fieldData.role_config?.[r.code]?.required || false} onChange={(e)=> updateRoleConfig(r.code, 'required', e.target.checked)} />
+                            <span>{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</span>
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 </div>
                 
                 <div>
