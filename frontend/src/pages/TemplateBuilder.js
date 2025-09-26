@@ -285,8 +285,8 @@ const TemplateBuilder = () => {
             {currentTemplate ? (
               <div className="space-y-3">
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  <div className="font-medium">{getLocalizedText(currentTemplate.name)}</div>
-                  <div className="text-sm text-gray-600">{getLocalizedText(currentTemplate.description)}</div>
+                  <div className="font-medium">{getLocalizedText(currentTemplate?.name)}</div>
+                  <div className="text-sm text-gray-600">{getLocalizedText(currentTemplate?.description)}</div>
                 </div>
                 
                 {currentTemplate.fields?.map(fieldId => {
