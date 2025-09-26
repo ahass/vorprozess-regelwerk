@@ -14,6 +14,7 @@ public class FieldCreateDto
     public List<SelectOptionDto>? Options { get; set; }
     public DocumentMode? DocumentMode { get; set; }
     public DocumentConstraintsDto? DocumentConstraints { get; set; }
+    public Dictionary<string, object>? RoleConfig { get; set; }
 }
 
 public class FieldResponseDto
