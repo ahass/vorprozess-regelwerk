@@ -229,7 +229,7 @@ const TemplateBuilder = () => {
                         <button
                           className="btn-outline btn-sm"
                           onClick={()=>{
-                            setEditTemplateNameValue(currentTemplate.name || { de:'', fr:'', it:'' });
+                            setEditTemplateNameValue(currentTemplate?.name || { de:'', fr:'', it:'' });
                             setEditingTemplateName(true);
                           }}
                         >
