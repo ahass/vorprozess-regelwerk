@@ -68,7 +68,14 @@ const TemplateBuilder = () => {
   const handleCreateField = async (e) => {
     e.preventDefault();
     try {
-      const created = await createField(newField);
+      const payload = { ...newField };
+      // map options to DTO shape if type select
+      if (payload.type === 'select') {
+        payload.options = (payload.options || []).filter(o => (o.value||'').trim() !== '').map(o => ({ id: undefined, label: { de: o.value, fr: o.value, it: o.value }, value: o.value }));
+      } else {
+        delete payload.options;
+      }
+      const created = await createField(payload);
       setNewField({
         name: { de: '', fr: '', it: '' },
         type: 'text',
@@ -77,6 +84,11 @@ const TemplateBuilder = () => {
         validation: {},
         select_type: 'radio',
         options: [],
+        role_config: {
+          admin: { visible: true, editable: true, required: false },
+          klient: { visible: true, editable: true, required: false },
+          anmelder: { visible: true, editable: true, required: false }
+        },
         document_mode: 'download',
         document_constraints: {}
       });
