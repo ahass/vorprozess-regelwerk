@@ -278,6 +278,7 @@ REACT_APP_BACKEND_URL=<extern konfiguriert>
 ## 📄 Lizenz & Support
 
 - Dokumentation: diese README.md, sowie das Benutzerhandbuch unter ./docs/Benutzerhandbuch.md
+- Hinweis: Screenshots liegen im Ordner ./docs/images und werden relativ referenziert
 - Issues/Feature Requests: Ihr Quellcode-Repository
 - Betrieb: Bitte die oben genannten Service-/URL-Regeln beachten
 
