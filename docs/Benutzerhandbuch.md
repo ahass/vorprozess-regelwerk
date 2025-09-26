@@ -76,7 +76,7 @@ Tabs:
 - Abhängigkeiten: Visualisierung und Pflege von Feld‑Abhängigkeiten
 
 Screenshot (Erweiterter Builder):
-![Erweiterter Builder](/app/screenshots/enhanced_builder.png)
+![Erweiterter Builder](./images/enhanced_builder.png)
 
 Empfohlener Workflow:
 1) Builder: Felder anlegen und zuordnen
