@@ -110,7 +110,7 @@ Bedienung:
 - Ergebnis zeigt nur die sichtbaren Felder, inkl. Pflicht/Optional‑Status
 
 Screenshot (Simulator):
-![Simulator](/app/screenshots/simulator.png)
+![Simulator](./images/simulator.png)
 
 Hinweise:
 - Admin sieht typischerweise alle Felder
