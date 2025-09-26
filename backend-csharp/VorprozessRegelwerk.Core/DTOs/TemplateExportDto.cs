@@ -1,4 +1,6 @@
 using VorprozessRegelwerk.Core.Entities;
+// Note: Select option labels are exported using the same value for all languages as placeholders.
+
 using System.Text.Json.Nodes;
 
 using VorprozessRegelwerk.Core.Enums;
