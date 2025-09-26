@@ -127,6 +127,7 @@ const TemplateBuilder = () => {
 
   const getLocalizedText = (multiLangText) => {
     if (!multiLangText) return '';
+    if (typeof multiLangText === 'string') return multiLangText;
     return multiLangText[language] || multiLangText.de || '';
   };
 
