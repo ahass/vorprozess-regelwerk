@@ -208,10 +208,10 @@ const TemplateBuilder = () => {
                             onChange={setEditTemplateNameValue}
                           />
                         ) : (
-                          getLocalizedText(currentTemplate.name)
+                          getLocalizedText(currentTemplate?.name)
                         )}
                       </div>
-                      <div className="text-sm text-gray-600">{getLocalizedText(currentTemplate.description)}</div>
+                      <div className="text-sm text-gray-600">{getLocalizedText(currentTemplate?.description)}</div>
                     </div>
                     <div className="ml-4">
                       {editingTemplateName ? (
