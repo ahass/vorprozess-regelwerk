@@ -250,8 +250,10 @@ const TemplateListItem = ({ template, selected, onSelect, onUpdated }) => {
               }
             }}
             className="btn-outline"
+          >
+            ⬇️ {language === 'de' ? 'Export JSON' : language === 'fr' ? 'Exporter JSON' : 'Esporta JSON'}
+          </button>
 
-const TemplateListItem = ({ template, selected, onSelect, onUpdated }) => {
   const { language, updateTemplate } = useApp();
   const [editing, setEditing] = React.useState(false);
   const [editValue, setEditValue] = React.useState(template.name || { de:'', fr:'', it:'' });
