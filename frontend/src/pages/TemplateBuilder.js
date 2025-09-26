@@ -3,6 +3,72 @@ import { useApp } from '../contexts/AppContext';
 import MultiLanguageInput from '../components/MultiLanguageInput';
 
 const TemplateBuilder = () => {
+
+// Inline list item component for template list with inline name edit
+const TemplateListItem = ({ template, selected, onSelect, onUpdated }) => {
+  const { language, updateTemplate } = useApp();
+  const [editing, setEditing] = React.useState(false);
+  const [editValue, setEditValue] = React.useState(template.name || { de:'', fr:'', it:'' });
+
+  const getLocalizedText = (multiLangText, lang) => {
+    if (!multiLangText) return '';
+    return multiLangText[lang] || multiLangText.de || '';
+  };
+
+  return (
+    <div
+      onClick={onSelect}
+      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+        selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="font-medium text-gray-900">
+            {editing ? (
+              <MultiLanguageInput
+                label={language === 'de' ? 'Schablonenname' : language === 'fr' ? 'Nom du modèle' : 'Nome del modello'}
+                value={editValue}
+                onChange={setEditValue}
+              />
+            ) : (
+              getLocalizedText(template.name, language)
+            )}
+          </div>
+          <div className="text-sm text-gray-500">
+            {template.fields?.length || 0} {language === 'de' ? 'Felder' : language === 'fr' ? 'champs' : 'campi'}
+          </div>
+        </div>
+        <div className="ml-2">
+          {editing ? (
+            <button
+              className="btn-primary btn-sm"
+              onClick={async (e)=>{
+                e.stopPropagation();
+                const updated = await updateTemplate(template.id, { name: editValue });
+                onUpdated?.(updated);
+                setEditing(false);
+              }}
+            >
+              {language === 'de' ? 'Speichern' : language === 'fr' ? 'Enregistrer' : 'Salva'}
+            </button>
+          ) : (
+            <button
+              className="btn-outline btn-sm"
+              onClick={(e)=>{
+                e.stopPropagation();
+                setEditing(true);
+              }}
+            >
+              {language === 'de' ? 'Bearbeiten' : language === 'fr' ? 'Modifier' : 'Modifica'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
   const { 
     templates, 
     fields, 
