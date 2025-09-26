@@ -134,6 +134,9 @@ const TemplateBuilder = () => {
     return fields.find(f => f.id === fieldId);
   };
 
+  const [editingTemplateName, setEditingTemplateName] = useState(false);
+  const [editTemplateNameValue, setEditTemplateNameValue] = useState({ de: '', fr: '', it: '' });
+
   const availableFields = fields.filter(field => 
     !currentTemplate?.fields?.includes(field.id)
   );
