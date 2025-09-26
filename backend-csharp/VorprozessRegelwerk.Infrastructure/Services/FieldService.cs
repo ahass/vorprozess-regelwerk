@@ -59,6 +59,12 @@ public class FieldService : IFieldService
             DocumentMode = fieldDto.DocumentMode
         };
 
+        // Role configuration (visibility/editable/required per role)
+        if (fieldDto.RoleConfig != null)
+        {
+            field.RoleConfigObject = fieldDto.RoleConfig;
+        }
+
         // Set JSON properties
         if (fieldDto.Validation != null)
         {
