@@ -1,4 +1,44 @@
 #====================================================================================================
+---
+user_problem_statement: >-
+  Validate new UI changes: Roles matrix (rows: klient, anmelder, admin; cols: sichtbar, bearbeitbar, pflichtfeld),
+  select-type options entry, inline template name edit, and JSON export from builder. Bulk export not required.
+frontend:
+  - task: "New Field dialog with 9-role-checkbox matrix"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/TemplateBuilder.js"
+    priority: high
+  - task: "AdvancedFieldEditor shows same roles matrix"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/components/AdvancedFieldEditor.js"
+    priority: high
+  - task: "Template name inline edit in Builder"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/TemplateBuilder.js"
+    priority: high
+  - task: "Export JSON button in Builder"
+    implemented: true
+    working: NA
+    file: "/app/frontend/src/pages/TemplateBuilder.js"
+    priority: medium
+metadata:
+  created_by: main_agent
+  version: 1.2
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Create select field with options and role matrix; verify persisted"
+    - "Edit template name inline; verify persisted"
+    - "Export JSON for selected template; network 200 and blob"
+    - "No runtime errors in console"
+  test_all: false
+  test_priority: high
+---
+
 # START - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
 #====================================================================================================
 
