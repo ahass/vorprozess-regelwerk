@@ -209,41 +209,7 @@ const AdvancedFieldEditor = ({ field, onSave, onCancel, availableFields = [] }) 
 
                 </div>
                 
-                <div>
-                  <label className="form-label">
-                    {language === 'de' ? 'Sichtbarkeit' : language === 'fr' ? 'Visibilité' : 'Visibilità'}
-                  </label>
-                  <select
-                    value={fieldData.visibility}
-                    onChange={(e) => setFieldData({...fieldData, visibility: e.target.value})}
-                    className="form-select"
-                  >
-                    <option value="visible">
-                      {language === 'de' ? 'Nur sichtbar' : language === 'fr' ? 'Visible seulement' : 'Solo visibile'}
-                    </option>
-                    <option value="editable">
-                      {language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}
-                    </option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="form-label">
-                    {language === 'de' ? 'Erforderlich' : language === 'fr' ? 'Requis' : 'Obbligatorio'}
-                  </label>
-                  <select
-                    value={fieldData.requirement}
-                    onChange={(e) => setFieldData({...fieldData, requirement: e.target.value})}
-                    className="form-select"
-                  >
-                    <option value="optional">
-                      {language === 'de' ? 'Optional' : language === 'fr' ? 'Optionnel' : 'Opzionale'}
-                    </option>
-                    <option value="required">
-                      {language === 'de' ? 'Pflicht' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}
-                    </option>
-                  </select>
-                </div>
+{/* Role-based settings */}
               </div>
 
               {/* Select Field Options */}
