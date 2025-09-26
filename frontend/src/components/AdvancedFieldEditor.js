@@ -8,15 +8,17 @@ const AdvancedFieldEditor = ({ field, onSave, onCancel, availableFields = [] }) 
   const [fieldData, setFieldData] = useState({
     name: { de: '', fr: '', it: '' },
     type: 'text',
-    visibility: 'editable',
-    requirement: 'optional',
     validation: {},
     select_type: 'radio',
     options: [],
     document_mode: 'download',
     document_constraints: {},
     dependencies: [],
-    role_config: {},
+    role_config: {
+      admin: { visible: true, editable: true, required: false },
+      klient: { visible: true, editable: true, required: false },
+      anmelder: { visible: true, editable: true, required: false }
+    },
     customer_specific: false,
     visible_for_customers: [],
     ...field
