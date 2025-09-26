@@ -63,11 +63,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Create select field with options and role matrix; verify persisted"
-    - "Edit template name inline; verify persisted"
-    - "Export JSON for selected template; network 200 and blob"
-    - "No runtime errors in console"
-  test_all: false
+    - "All Builder UX scenarios completed successfully"
+  stuck_tasks: []
+  test_all: true
   test_priority: high
 ---
 
