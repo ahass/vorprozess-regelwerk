@@ -439,6 +439,36 @@ const TemplateBuilder = () => {
                     </div>
                   </div>
                 </div>
+
+                  {/* Options for select type */}
+                  {newField.type === 'select' && (
+                    <div className="mt-4">
+                      <label className="form-label">{language === 'de' ? 'Auswahl-Optionen' : language === 'fr' ? 'Options de sélection' : 'Opzioni di selezione'}</label>
+                      <div className="space-y-2">
+                        {newField.options.map((opt, idx) => (
+                          <div key={idx} className="flex items-center space-x-2">
+                            <input
+                              type="text"
+                              className="form-input flex-1"
+                              placeholder={language === 'de' ? 'Wert' : language === 'fr' ? 'Valeur' : 'Valore'}
+                              value={opt.value || ''}
+                              onChange={(e)=>{
+                                const updated = [...newField.options];
+                                updated[idx] = { ...(updated[idx]||{}), value: e.target.value };
+                                setNewField({ ...newField, options: updated });
+                              }}
+                            />
+                            <button type="button" className="btn-secondary" onClick={()=>{
+                              const updated = newField.options.filter((_,i)=>i!==idx);
+                              setNewField({ ...newField, options: updated });
+                            }}>−</button>
+                          </div>
+                        ))}
+                        <button type="button" className="btn-outline" onClick={()=> setNewField({ ...newField, options: [...newField.options, { value: '' }] })}>+ {language === 'de' ? 'Option hinzufügen' : language === 'fr' ? 'Ajouter une option' : 'Aggiungi opzione'}</button>
+                      </div>
+                    </div>
+                  )}
+
                 
                 <div className="flex justify-end space-x-3 mt-6">
                   <button
