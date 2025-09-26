@@ -95,7 +95,7 @@ Funktionen:
 - Kennzahlen: Anzahl Schablonen, Felder, Textfelder, Pflichtfelder
 
 Screenshot (Übersicht):
-![Übersicht](/app/screenshots/overview.png)
+![Übersicht](./images/overview.png)
 
 ---
 
