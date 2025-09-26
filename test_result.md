@@ -58,8 +58,9 @@ frontend:
         comment: "✅ Export JSON functionality working perfectly against C# backend. Successfully tested: 1) Export JSON button found and clickable in top right corner, 2) Download triggered with correct filename format 'template-fa2d27dd-4ee3-483f-adba-00cfc20c36a1.json', 3) Network request to /api/templates/{id}/export returns 200 status, 4) JSON content has correct structure with 'id' and 'name' fields, 5) Template name properly structured with 'name.de' containing 'Geänderter Name', 6) File downloads successfully as blob. Export endpoint working correctly with C# backend."
 metadata:
   created_by: main_agent
-  version: 1.2
+  version: 1.3
   run_ui: true
+  test_sequence: 3
 
 test_plan:
   current_focus:
