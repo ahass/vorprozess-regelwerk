@@ -250,25 +250,24 @@ const TemplateBuilder = () => {
           <div className="card-body">
             <div className="space-y-2">
               {templates.map(template => (
-                <div
+                <TemplateListItem
                   key={template.id}
-                  onClick={() => {
+                  template={template}
+                  selected={selectedTemplateId === template.id}
+                  onSelect={() => {
                     setSelectedTemplateId(template.id);
                     setCurrentTemplate(template);
                   }}
-                  className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                    selectedTemplateId === template.id 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="font-medium text-gray-900">
-                    {getLocalizedText(template.name)}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {template.fields?.length || 0} {language === 'de' ? 'Felder' : language === 'fr' ? 'champs' : 'campi'}
-                  </div>
-                </div>
+                  onUpdated={(updated)=>{
+                    // update local state template list
+                    const updatedTemplates = templates.map(t => t.id === updated.id ? { ...t, ...updated } : t);
+                    // Note: we cannot directly set templates here; rely on context update via updateTemplate dispatch,
+                    // but ensure currentTemplate reflects the change if selected
+                    if (selectedTemplateId === updated.id) {
+                      setCurrentTemplate({ ...template, ...updated });
+                    }
+                  }}
+                />
               ))}
             </div>
           </div>
