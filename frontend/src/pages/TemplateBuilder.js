@@ -38,6 +38,11 @@ const TemplateBuilder = () => {
     validation: {},
     select_type: 'radio',
     options: [],
+    role_config: {
+      admin: { visible: true, editable: true, required: false },
+      klient: { visible: true, editable: true, required: false },
+      anmelder: { visible: true, editable: true, required: false }
+    },
     document_mode: 'download',
     document_constraints: {}
   });
