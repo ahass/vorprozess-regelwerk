@@ -58,7 +58,7 @@ Aktionen:
 - Zuordnung: Feld aus „Verfügbare Felder“ einer Schablone hinzufügen
 
 Screenshot (Builder):
-![Builder](/app/screenshots/builder.png)
+![Builder](./images/builder.png)
 
 Tipps:
 - Verwenden Sie klare, kurze Feldnamen in allen Sprachen
