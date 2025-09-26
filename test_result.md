@@ -68,6 +68,11 @@ test_plan:
   stuck_tasks: []
   test_all: true
   test_priority: high
+
+agent_communication:
+  - agent: "testing"
+    message: >-
+      ✅ Builder UX Test Suite completed successfully against C# backend! All 5 scenarios passed with 100% success rate: 1) Template creation with German name only - template created and selected showing '0 Felder' as expected. 2) Field creation with 9-role-checkbox matrix - 'Test Auswahl' field created with proper role configuration (Klient: visible+editable+required, Anmelder: visible only, Admin: all unchecked), role matrix displays correctly with 3 roles × 3 properties = 9 checkboxes. 3) Field addition to template - field successfully added, template count incremented to '1 Feld'. 4) Template name inline edit - successfully changed from 'Test Template Deutsch' to 'Geänderter Name', changes persist and display correctly. 5) Export JSON functionality - download triggered with correct filename 'template-{id}.json', network request returns 200, JSON structure correct with id and name.de fields. Fixed initial runtime error by adding null safety checks to getLocalizedText function. No console errors or network failures detected. All UI components render properly with German localization. C# backend integration working flawlessly.
 ---
 
 # START - Testing Protocol - DO NOT EDIT OR REMOVE THIS SECTION
