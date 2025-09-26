@@ -128,7 +128,7 @@ Funktionen:
 - Detailansicht: Geänderte Werte, Zeitstempel, Benutzer
 
 Screenshot (Änderungsprotokoll):
-![Changelog](/app/screenshots/changelog.png)
+![Changelog](./images/changelog.png)
 
 Best Practices:
 - Vor größeren Umbauten kurz durchsehen, ob vorherige Änderungen konsistent waren
