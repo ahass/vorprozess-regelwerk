@@ -409,41 +409,33 @@ const TemplateBuilder = () => {
                         <option value="document">Dokument</option>
                       </select>
                     </div>
-                    
-                    <div>
+
+                    {/* Role-based settings */}
+                    <div className="md:col-span-2">
                       <label className="form-label">
-                        {language === 'de' ? 'Sichtbarkeit' : language === 'fr' ? 'Visibilité' : 'Visibilità'}
+                        {language === 'de' ? 'Rollenbasierte Einstellungen' : language === 'fr' ? 'Paramètres par rôle' : 'Impostazioni per ruolo'}
                       </label>
-                      <select
-                        value={newField.visibility}
-                        onChange={(e) => setNewField({...newField, visibility: e.target.value})}
-                        className="form-select"
-                      >
-                        <option value="visible">
-                          {language === 'de' ? 'Nur sichtbar' : language === 'fr' ? 'Visible seulement' : 'Solo visibile'}
-                        </option>
-                        <option value="editable">
-                          {language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}
-                        </option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="form-label">
-                        {language === 'de' ? 'Erforderlich' : language === 'fr' ? 'Requis' : 'Obbligatorio'}
-                      </label>
-                      <select
-                        value={newField.requirement}
-                        onChange={(e) => setNewField({...newField, requirement: e.target.value})}
-                        className="form-select"
-                      >
-                        <option value="optional">
-                          {language === 'de' ? 'Optional' : language === 'fr' ? 'Optionnel' : 'Opzionale'}
-                        </option>
-                        <option value="required">
-                          {language === 'de' ? 'Pflicht' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}
-                        </option>
-                      </select>
+                      <div className="grid grid-cols-3 gap-4">
+                        {['admin','klient','anmelder'].map(role => (
+                          <div key={role} className="border rounded p-3">
+                            <div className="font-medium capitalize mb-2">{role}</div>
+                            <div className="space-y-2">
+                              <label className="inline-flex items-center space-x-2">
+                                <input type="checkbox" checked={newField.role_config[role].visible} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], visible: e.target.checked}}})} />
+                                <span>{language === 'de' ? 'Sichtbar' : language === 'fr' ? 'Visible' : 'Visibile'}</span>
+                              </label>
+                              <label className="inline-flex items-center space-x-2">
+                                <input type="checkbox" checked={newField.role_config[role].editable} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], editable: e.target.checked}}})} />
+                                <span>{language === 'de' ? 'Bearbeitbar' : language === 'fr' ? 'Modifiable' : 'Modificabile'}</span>
+                              </label>
+                              <label className="inline-flex items-center space-x-2">
+                                <input type="checkbox" checked={newField.role_config[role].required} onChange={(e)=> setNewField({...newField, role_config: {...newField.role_config, [role]: {...newField.role_config[role], required: e.target.checked}}})} />
+                                <span>{language === 'de' ? 'Pflichtfeld' : language === 'fr' ? 'Obligatoire' : 'Obbligatorio'}</span>
+                              </label>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
